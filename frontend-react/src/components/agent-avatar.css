@@ -1,0 +1,5 @@
+.agent-avatar.is-business{padding:0;background:transparent;border:0;overflow:hidden;box-shadow:0 2px 5px rgba(32,55,93,.09)}
+.agent-avatar.is-business img{width:100%;height:100%;object-fit:cover}
+.avatar-option .auto-business-avatar{padding:0;overflow:hidden;border-radius:12px;display:block;width:44px;height:44px;box-shadow:0 2px 5px rgba(32,55,93,.08)}
+.avatar-option .auto-business-avatar img{width:44px;height:44px;border-radius:0;display:block}
+.avatar-picker .automatic-avatar-hint{display:flex;align-items:center;gap:7px;margin:0 0 14px;color:var(--semi-color-text-2);font-size:12px}

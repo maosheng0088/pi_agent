@@ -1,0 +1,73 @@
+{
+  "name": "piconsole-desktop",
+  "version": "0.2.1",
+  "private": true,
+  "description": "PiConsole 企业智能体 Windows 桌面端",
+  "author": "PiConsole",
+  "main": "src/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.cjs",
+    "test:runtime": "node scripts/run-runtime-test.cjs",
+    "build:icons": "node scripts/build-icons.cjs",
+    "build": "npm run build:icons && electron-builder --win nsis --x64 --publish never",
+    "publish:update": "node scripts/publish-update.cjs",
+    "test:updates-runtime": "node scripts/run-update-test.cjs"
+  },
+  "devDependencies": {
+    "electron": "45.2.1",
+    "electron-builder": "26.18.0",
+    "rcedit": "5.0.2",
+    "yaml": "2.9.1"
+  },
+  "build": {
+    "appId": "asia.junweirpa.piconsole",
+    "productName": "PiConsole",
+    "asar": true,
+    "electronDist": "node_modules/electron/dist",
+    "directories": {
+      "output": "release/installer"
+    },
+    "files": [
+      "src/**/*",
+      "assets/icon.png",
+      "assets/icon.ico",
+      "package.json"
+    ],
+    "extraFiles": [
+      {
+        "from": "使用说明.txt",
+        "to": "使用说明.txt"
+      }
+    ],
+    "artifactName": "PiConsole-Setup-${version}-${arch}.${ext}",
+    "afterPack": "scripts/after-pack.cjs",
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/icon.ico",
+      "signAndEditExecutable": false,
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "include": "scripts/installer.nsh",
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": "always",
+      "shortcutName": "PiConsole",
+      "uninstallDisplayName": "PiConsole 企业智能体",
+      "deleteAppDataOnUninstall": false
+    },
+    "publish": {
+      "provider": "generic",
+      "url": "https://ai.junweirpa.asia/desktop-updates/windows/",
+      "useMultipleRangeRequest": false
+    }
+  },
+  "dependencies": {
+    "electron-updater": "6.8.12",
+    "semver": "7.8.5"
+  }
+}

@@ -1,0 +1,24 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+import yauzl from 'yauzl';
+const android=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const meta=JSON.parse(await fs.readFile(path.join(android,'release','release.json'),'utf8'));
+const apk=path.join(android,'release',meta.file);
+const entries=await new Promise((resolve,reject)=>yauzl.open(apk,{lazyEntries:true},(error,zip)=>{if(error)return reject(error);const names=[];zip.on('entry',entry=>{names.push(entry.fileName);zip.readEntry()});zip.on('end',()=>resolve(names));zip.on('error',reject);zip.readEntry()}));
+for(const required of ['AndroidManifest.xml','resources.arsc','classes.dex'])assert(entries.includes(required),`${required} missing`);
+for(const name of entries)assert(!/\.(?:p12|jks|json|java|ps1|mjs)$/i.test(name),`Unexpected packaged private/source file ${name}`);
+const manifest=await fs.readFile(path.join(android,'app','src','main','AndroidManifest.xml'),'utf8');
+assert(!manifest.includes('android:debuggable="true"'));
+assert.deepEqual([...manifest.matchAll(/uses-permission android:name="([^"]+)"/g)].map(x=>x[1]),['android.permission.INTERNET']);
+const checks=await Promise.all(['http://127.0.0.1:3210','https://ai.junweirpa.asia'].map(async base=>{
+ const [download,install,qr]=await Promise.all([fetch(`${base}/android/${meta.file}`,{signal:AbortSignal.timeout(30000)}),fetch(`${base}/android/install.html`,{signal:AbortSignal.timeout(30000)}),fetch(`${base}/android/install-qr.png`,{signal:AbortSignal.timeout(30000)})]);
+ assert.equal(download.status,200);assert(!download.headers.get('content-type')?.includes('text/html'));
+ const bytes=Buffer.from(await download.arrayBuffer());assert.equal(bytes.length,meta.size);assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),meta.sha256);
+ assert.equal(install.status,200);assert((await install.text()).includes(meta.file));assert.equal(qr.status,200);const png=Buffer.from(await qr.arrayBuffer());assert.equal(png.readUInt32BE(16),200);
+ return{base,apk:200,install:200,qr:200,sha256Verified:true};
+}));
+await fs.writeFile(path.join(android,'release','verification.json'),JSON.stringify({checkedAt:new Date().toISOString(),checks,archiveEntries:entries.length,permission:'INTERNET',runtimeDeviceTest:false},null,2));
+console.log(JSON.stringify({ok:true,checks}));

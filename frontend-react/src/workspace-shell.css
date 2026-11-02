@@ -1,0 +1,155 @@
+/* Feishu-style desktop shell: application navigation, agent list, conversation. */
+.app-shell{flex-direction:row;--workspace-navigation-width:176px;--workspace-navigation-surface:#f1f4fa}
+.app-header.workspace-sidebar{width:var(--workspace-navigation-width);height:100%;flex:none;display:flex;flex-direction:column;align-items:stretch;gap:0;padding:20px 12px 12px;background:var(--workspace-navigation-surface);border-right:1px solid var(--app-line);border-bottom:0;box-shadow:none;z-index:4;min-height:0}
+.workspace-sidebar .sidebar-brand{flex:none;margin:0 4px 22px;min-width:0}
+.workspace-sidebar .product-mark{gap:9px;font-size:17px;letter-spacing:0;max-width:100%}
+.workspace-sidebar .brand-symbol{width:32px;height:32px;font-size:25px;border-radius:9px;flex:none}
+.app-header.workspace-sidebar .workspace-name{display:block;font-size:11px;line-height:1.6;color:var(--app-muted);margin:11px 0 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.workspace-sidebar .desktop-workspace-navigation{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:block;scrollbar-width:thin;overscroll-behavior:contain;padding-bottom:12px}
+.workspace-sidebar .side-navigation.semi-navigation{width:100%;min-width:0;height:auto;background:transparent;padding:0;border:0;flex:none}
+.workspace-sidebar .side-navigation .semi-navigation-list{display:flex;flex-direction:column;gap:4px}
+.workspace-sidebar .side-navigation .semi-navigation-item,.workspace-sidebar .side-navigation .semi-navigation-sub-title{width:100%;min-height:46px;height:46px;margin:0;padding:0 12px;border-radius:8px;font-size:13px;white-space:nowrap;color:#54647b;transition:background .15s,color .15s}
+.workspace-sidebar .side-navigation .semi-navigation-item:hover,.workspace-sidebar .side-navigation .semi-navigation-sub-title:hover{background:#e8edf6}
+.workspace-sidebar .side-navigation .semi-navigation-item-icon,.workspace-sidebar .side-navigation .semi-navigation-sub-title-icon{margin-right:10px;flex:none}
+.workspace-sidebar .side-navigation .semi-icon{font-size:19px}
+.workspace-sidebar .side-navigation .semi-navigation-item-selected{background:#e0eaff;color:#285bd4;font-weight:600}
+.workspace-sidebar .side-navigation .semi-navigation-item-selected:hover{background:#d9e5ff}
+.workspace-sidebar .side-navigation .semi-navigation-sub.semi-navigation-sub-open{background:transparent}
+.workspace-sidebar .side-navigation .semi-navigation-sub .semi-navigation-list{gap:2px;padding-top:4px}
+.workspace-sidebar .side-navigation .semi-navigation-sub .semi-navigation-item{height:40px;min-height:40px;padding-left:20px;font-size:12px}
+.workspace-sidebar .side-navigation .semi-navigation-sub .semi-navigation-item .semi-icon{font-size:16px}
+.workspace-sidebar .side-navigation .semi-navigation-sub-title .semi-navigation-sub-title-arrow .semi-icon{font-size:12px}
+.workspace-sidebar .header-account{flex:none;margin:0;padding:12px 0 0;border-top:1px solid #e0e6f0;min-width:0;display:block}
+.workspace-sidebar .account-trigger.semi-button{width:100%;height:44px;min-width:0;padding:0 6px;justify-content:flex-start;text-align:left;border-radius:8px}
+.workspace-sidebar .account-trigger .semi-button-content{display:flex;align-items:center;gap:8px;min-width:0;width:100%}
+.workspace-sidebar .account-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:#47586f}
+.workspace-sidebar .account-trigger .semi-icon{margin-left:auto;font-size:12px;flex:none}
+.workspace-sidebar .account-trigger .semi-avatar{flex:none}
+.workspace-sidebar .mobile-navigation.semi-button{display:none}
+.app-shell .workspace-layout{height:100%;min-height:0;min-width:0;flex:1}
+.app-shell .desktop-agents{background:#fff;width:304px}
+.app-shell .agent-list-panel{padding-top:22px}
+.app-shell .agent-list-panel>.semi-input-wrapper{background:#f5f7fa;border-color:#e8edf4}
+.app-shell .list-heading{margin-bottom:18px}
+.app-shell .list-heading h2{font-size:17px}
+.app-shell .agent-list-item:hover{background:#f3f6fb}
+.app-shell .agent-list-item.active{background:#eaf1ff;border-color:#dde7fc}
+.app-shell .conversation-header{padding-top:14px;padding-bottom:10px;height:70px}
+.app-shell .conversation-content-nav{height:38px}
+.app-shell .management-layout{background:#f7f9fc}
+.app-shell .management-main{width:100%;min-width:0}
+.chat-maximized .workspace-layout{height:100%}
+@media(min-width:1600px){.app-shell{--workspace-navigation-width:180px}.app-shell .desktop-agents{width:322px}}
+@media(min-width:781px) and (max-width:1200px){
+ .app-shell{--workspace-navigation-width:76px}
+ .app-header.workspace-sidebar{padding:18px 10px 10px}
+ .workspace-sidebar .sidebar-brand{margin:0 0 22px;display:flex;justify-content:center}
+ .workspace-sidebar .product-mark strong,.app-header.workspace-sidebar .workspace-name{display:none}
+ .workspace-sidebar .brand-symbol{width:34px;height:34px}
+ .workspace-sidebar .side-navigation.semi-navigation{width:56px;min-width:56px}
+ .workspace-sidebar .side-navigation .semi-navigation-list{gap:6px}
+ .workspace-sidebar .side-navigation .semi-navigation-item,.workspace-sidebar .side-navigation .semi-navigation-sub-title{padding:0;width:48px;min-height:48px;height:48px;margin:0 auto;justify-content:center}
+ .workspace-sidebar .side-navigation .semi-navigation-item-icon,.workspace-sidebar .side-navigation .semi-navigation-sub-title-icon{margin:0}
+ .workspace-sidebar .side-navigation .semi-navigation-item-text{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .workspace-sidebar .side-navigation .semi-navigation-item-icon-toggle-right,.workspace-sidebar .side-navigation .semi-navigation-sub-title-arrow{display:none}
+ .workspace-sidebar .side-navigation .semi-navigation-item-icon-info,.workspace-sidebar .side-navigation .semi-navigation-sub-title-icon{width:24px;display:flex;align-items:center;justify-content:center;flex:none}
+ .workspace-sidebar .side-navigation .semi-navigation-item-icon .semi-icon,.workspace-sidebar .side-navigation .semi-navigation-sub-title-icon .semi-icon{font-size:22px}
+ .workspace-sidebar .header-account{padding-top:12px}
+ .workspace-sidebar .account-trigger.semi-button{padding:0;height:46px;justify-content:center}
+ .workspace-sidebar .account-trigger .semi-button-content{justify-content:center}
+ .workspace-sidebar .account-name,.workspace-sidebar .account-trigger .semi-icon{display:none}
+ .app-shell .desktop-agents{width:278px}
+}
+@media(max-width:780px){
+ .app-shell{flex-direction:column}
+ .app-header.workspace-sidebar{width:100%;height:58px;flex-direction:row;align-items:center;gap:12px;padding:0 12px;border-right:0;border-bottom:1px solid var(--app-line);background:#fff;overflow:visible;min-height:58px}
+ .workspace-sidebar .sidebar-brand{margin:0;display:flex;align-items:center}
+ .workspace-sidebar .product-mark{font-size:15px;gap:7px}
+ .workspace-sidebar .brand-symbol{width:29px;height:29px;font-size:23px;border-radius:8px}
+ .workspace-sidebar .product-mark strong{display:inline}
+ .app-header.workspace-sidebar .workspace-name,.workspace-sidebar .desktop-workspace-navigation{display:none}
+ .workspace-sidebar .mobile-navigation.semi-button{display:inline-flex;min-height:44px;padding:0 8px;font-size:12px}
+ .workspace-sidebar .header-account{margin:0 0 0 auto;padding:0;border:0;width:auto}
+ .workspace-sidebar .account-trigger.semi-button{width:40px;min-width:40px;padding:0;height:44px;justify-content:center}
+ .workspace-sidebar .account-trigger .semi-button-content{justify-content:center}
+ .workspace-sidebar .account-name,.workspace-sidebar .account-trigger .semi-icon{display:none}
+ .app-shell .workspace-layout{height:auto;flex:1}
+ .app-shell .desktop-agents{display:none}
+ .app-shell .conversation-header{height:64px;padding:10px 12px}
+ .app-shell .conversation-content-nav{height:38px}
+ .app-shell.chat-maximized .workspace-layout{height:100%}
+}
+@media(prefers-reduced-motion:reduce){.workspace-sidebar .side-navigation *{transition:none!important;animation:none!important}}
+@media(max-width:500px){
+ .app-shell .composer-toolbar{flex-wrap:nowrap;gap:6px;padding-left:8px;padding-right:8px}
+ .app-shell .composer-toolbar>.semi-select{flex:1;width:0;min-width:0;max-width:none!important}
+ .app-shell .composer-toolbar>.semi-button{flex:none;min-width:0;padding-left:10px;padding-right:10px}
+ .app-shell .composer-toolbar>.semi-button[type=submit]{margin-left:auto}
+ .app-shell .composer-toolbar .composer-spacer{display:none}
+}
+
+/* Management uses full-width rows, avoiding a nested scrollable Nav submenu. */
+.workspace-sidebar .management-navigation{margin-top:14px;padding-top:12px;border-top:1px solid #e0e6f0}
+.workspace-sidebar .management-trigger.semi-button{width:100%;height:44px;justify-content:flex-start;padding:0 12px;color:#54647b;font-size:13px;border-radius:8px}
+.management-trigger .semi-button-content{width:100%;justify-content:flex-start;gap:10px}
+.management-trigger .semi-button-content-right{display:flex;flex:1;align-items:center;gap:10px;margin-left:0;text-align:left}
+.management-trigger .semi-button-content-right>.semi-icon{margin-left:auto;font-size:12px}
+.management-trigger .semi-icon{font-size:19px}
+.management-trigger .semi-button-content>.semi-icon:last-child{margin-left:auto;font-size:12px;transition:transform .16s}
+.management-trigger .semi-icon.is-open{transform:rotate(180deg)}
+.management-items{display:flex;flex-direction:column;gap:3px;padding:5px 0 0}
+.workspace-sidebar .management-item.semi-button{height:40px;min-height:40px;width:100%;padding:0 12px 0 18px;justify-content:flex-start;color:#54647b;font-size:12px;border-radius:7px}
+.management-item .semi-button-content{min-width:0;justify-content:flex-start;gap:9px;white-space:nowrap}
+.management-item .semi-button-content-right{margin-left:0}
+.management-item .semi-icon{font-size:16px;flex:none}
+.workspace-sidebar .management-item.is-active,.workspace-sidebar .management-trigger.is-active{color:#285bd4;background:#e0eaff;font-weight:600}
+.workspace-sidebar .management-trigger.compact{margin-top:14px;padding:0;justify-content:center}
+.management-trigger.compact .semi-button-content{justify-content:center}
+.management-trigger.compact .semi-button-content>.semi-icon:last-child{margin:0;font-size:19px}
+
+/* One stable composer toolbar; the draft and send action retain priority. */
+.app-shell .unified-composer-toolbar{display:flex;align-items:center;flex-wrap:nowrap;gap:8px;min-height:52px;padding:8px 10px;border-top:1px solid #edf0f5;background:#fafbfe;border-radius:0 0 10px 10px}
+.unified-composer-toolbar .composer-mode{flex:none;white-space:nowrap;background:#eef1f7;border-radius:7px;padding:2px}
+.unified-composer-toolbar .composer-mode .semi-radio{padding:5px 8px;font-size:12px;border:0!important;border-radius:5px;margin:0;min-height:30px}
+.unified-composer-toolbar .composer-mode .semi-radio-addon-buttonRadio{padding:0}
+.unified-composer-toolbar .composer-mode .semi-radio-checked{background:#fff;box-shadow:0 1px 4px #1d32531a;color:var(--semi-color-primary)}
+.mode-compact{display:none}
+.composer-tools{display:flex;align-items:center;gap:3px;min-width:0;flex:none}
+.app-shell .unified-composer-toolbar .composer-tool.semi-button{height:34px;min-width:34px;padding:0 8px;color:#64748b;flex:none}
+.composer-tool .mention-symbol{font-size:19px;font-weight:600;line-height:1}
+.app-shell .unified-composer-toolbar .composer-tool.has-selection{background:#e9efff;color:#315fe5}
+.composer-selection-count{font-size:10px;margin-left:2px}
+.composer-skill .composer-tool-label{display:block;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app-shell .unified-composer-toolbar>.composer-spacer{flex:1;display:block;min-width:0}
+.app-shell .unified-composer-toolbar>.semi-button{height:36px;min-width:92px;padding:0 14px;border-radius:7px;font-weight:600;flex:none}
+.composer-control-panel{width:min(320px,calc(100vw - 36px));padding:16px;box-sizing:border-box}
+.composer-control-panel>strong{display:block;font-size:14px;color:var(--semi-color-text-0)}
+.composer-popover-trigger{display:inline-flex;align-items:center}
+.composer-control-heading{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.composer-control-heading>strong{font-size:14px;color:var(--semi-color-text-0)}
+.composer-control-heading>.semi-button{flex:none;width:32px;height:32px}
+.composer-control-footer{display:flex;justify-content:flex-end;margin-top:12px}
+.composer-control-panel>p{font-size:12px;color:var(--semi-color-text-2);line-height:1.6;margin:8px 0 12px}
+.composer-control-panel>.semi-select{width:100%}
+.composer-control-panel .semi-select-selection{min-width:0}
+.app-shell .chat-composer .semi-input-textarea-wrapper{background:#fff}
+
+.agent-list-item{position:relative}
+.agent-unread-dot{position:absolute;right:-3px;top:-3px;width:9px;height:9px;border:2px solid #fff;border-radius:50%;background:#ed5b63;box-sizing:content-box;z-index:1}
+.task-tab-pending{font-size:11px;line-height:18px;padding:0 5px;border-radius:4px;color:#936016;background:#fff0cf;white-space:nowrap}
+.list-tabs>button{white-space:nowrap}
+.list-tabs>button.selected span{background:#e5edff;color:#315fd3}
+
+@media(max-width:1000px){.composer-tool-label{display:none!important}.app-shell .unified-composer-toolbar .composer-tool.semi-button{padding:0;min-width:34px;width:34px}.composer-tools{gap:1px}}
+@media(max-width:500px){
+ .app-shell .unified-composer-toolbar{gap:4px;min-height:48px;padding:6px}
+ .unified-composer-toolbar .mode-desktop{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .unified-composer-toolbar .mode-compact{display:inline}
+ .unified-composer-toolbar .composer-mode .semi-radio{padding:5px 6px;font-size:11px;min-height:30px}
+ .app-shell .unified-composer-toolbar .composer-tool.semi-button{width:32px;min-width:32px;height:34px;padding:0}
+ .app-shell .unified-composer-toolbar>.semi-button{min-width:64px;padding:0 8px;font-size:11px;height:34px}
+ .unified-composer-toolbar>.semi-button .semi-button-content{gap:4px}
+ .app-shell .unified-composer-toolbar>.composer-spacer{display:block}
+}
+@media(min-width:361px) and (max-width:500px){.app-shell .unified-composer-toolbar .composer-tool.semi-button{width:40px;min-width:40px;height:40px}.app-shell .unified-composer-toolbar>.semi-button{min-width:76px;height:38px}.unified-composer-toolbar .composer-mode .semi-radio{min-height:36px;padding:7px}}
+@media(prefers-reduced-motion:reduce){.management-trigger .semi-icon{transition:none}}

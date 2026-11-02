@@ -1,0 +1,38 @@
+{
+  "name": "pi-web-local",
+  "version": "0.18.0",
+  "private": true,
+  "type": "module",
+  "description": "A shared company workspace with user accounts and audit, backed by the real Pi Agent SDK",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "start": "node scripts/start-source-checkout.mjs",
+    "start:legacy": "node server.mjs",
+    "dev:frontend": "npm --prefix frontend-react run dev",
+    "build:frontend": "node scripts/build-react-frontend.mjs",
+    "publish:frontend": "node scripts/publish-frontend.mjs",
+    "preview:frontend": "npm --prefix frontend-react run preview",
+    "install:cloud-documents": "node scripts/install-cloud-document-tools.mjs",
+    "package:cloud-documents": "node scripts/package-cloud-document-skills.mjs",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs"
+  },
+  "dependencies": {
+    "@wecom/aibot-node-sdk": "1.0.7",
+    "exceljs": "4.4.0",
+    "imapflow": "2.10.0",
+    "mailparser": "3.14.1",
+    "mammoth": "1.13.0",
+    "nodemailer": "10.3.1",
+    "pdfjs-dist": "6.4.299",
+    "qrcode": "^1.5.4",
+    "yaml": "^2.9.1",
+    "yauzl": "^3.4.0"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "11.1.1"
+    }
+  }
+}

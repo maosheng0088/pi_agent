@@ -1,0 +1,8 @@
+.business-run-log-viewer{min-width:0;display:flex;flex-direction:column;gap:12px}
+.business-run-log-controls{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.business-run-log-controls [role=status]{font-size:12px;line-height:1.8;color:var(--semi-color-text-2)}
+.business-run-log-follow{display:flex;gap:12px;align-items:center;min-height:32px}
+.business-run-log-output{box-sizing:border-box;width:100%;margin:0;min-height:200px;height:42dvh;max-height:460px;overflow:auto;overscroll-behavior:contain;padding:16px;border:1px solid #26364a;border-radius:8px;background:#111a27;color:#e5eaf1;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:2;font:12px/1.8 Consolas,'Cascadia Code',ui-monospace,monospace;scrollbar-color:#4b5c75 #111a27}
+.business-run-log-output:focus-visible{outline:2px solid var(--semi-color-primary);outline-offset:2px}
+.business-run-log-notice{font-size:12px;line-height:1.8;color:var(--semi-color-warning);margin:0}
+@media(max-width:570px){.business-run-log-controls>.semi-space:last-child{width:100%}.business-run-log-controls .semi-button{min-height:40px}.business-run-log-follow{min-height:40px}.business-run-log-output{padding:12px;height:38dvh}}

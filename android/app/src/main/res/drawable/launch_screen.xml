@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/surface" />
+    <item android:width="88dp" android:height="88dp" android:gravity="center">
+        <shape android:shape="rectangle"><solid android:color="@color/brand_blue"/><corners android:radius="24dp"/></shape>
+    </item>
+    <item android:width="88dp" android:height="88dp" android:gravity="center" android:drawable="@drawable/ic_launcher_foreground" />
+</layer-list>

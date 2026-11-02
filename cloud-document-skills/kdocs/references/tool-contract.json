@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pi cloud_documents：kdocs",
+  "description": "这是 Pi 受控工具的参数契约；业务 tool 的 arguments 仍须符合 list_tools 当次返回的 inputSchema。安装与授权只由管理员连接面板处理。",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "const": "kdocs"
+        },
+        "action": {
+          "const": "list_tools"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "maxLength": 100,
+              "description": "按业务意图或工具名称筛选工具列表；列表较长或当前结果缺少目标能力时使用。"
+            },
+            "offset": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "工具目录返回 nextOffset 时，保持同一 query 并以该值续查。"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "provider",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "const": "kdocs"
+        },
+        "action": {
+          "const": "call"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "tool": {
+              "type": "string",
+              "minLength": 1,
+              "description": "list_tools 返回的确切工具名称，不是 CLI 命令或 shell 字符串。"
+            },
+            "arguments": {
+              "type": "object",
+              "description": "只包含对应业务工具 schema 允许的参数；不传连接凭据、认证头、进程参数或配置路径。",
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "tool",
+            "arguments"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "provider",
+        "action",
+        "params"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "examples": [
+    {
+      "provider": "kdocs",
+      "action": "list_tools"
+    }
+  ]
+}

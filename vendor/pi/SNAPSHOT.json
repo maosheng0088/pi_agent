@@ -1,0 +1,10 @@
+{
+  "upstream": "https://github.com/earendil-works/pi",
+  "license": "MIT",
+  "codingAgentVersion": "1.4.0",
+  "capturedAt": "2026-11-02T05:25:19.857Z",
+  "sourceFiles": 1990,
+  "sourceManifestSha256": "600ad0fd24bfe98dbab6cd577e640f6b219c7871315d5d2d6f8097fa80829555",
+  "generatedProviderDataIncluded": false,
+  "manifestFormat": "relative path + NUL + Git blob object ID; entries sorted by path and separated by LF"
+}

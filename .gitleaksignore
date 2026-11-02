@@ -1,0 +1,10 @@
+# Exact non-operational test fixtures, individually reviewed. No directory exclusions.
+# Logger rotation and cloud-vault tests use synthetic keys in temporary stores.
+# The SDK JSON parser fixture matches its public upstream file byte-for-byte.
+test/admin-logs.test.mjs:generic-api-key:39
+test/cloud-document-credentials.test.mjs:generic-api-key:23
+test/cloud-document-credentials.test.mjs:generic-api-key:24
+test/cloud-document-credentials.test.mjs:generic-api-key:26
+vendor/pi/packages/ai/test/data/json-test-suite.json:generic-api-key:258
+vendor/pi/packages/ai/test/data/json-test-suite.json:generic-api-key:259
+vendor/pi/packages/ai/test/data/json-test-suite.json:generic-api-key:262

@@ -1,0 +1,17 @@
+/* Transparent thumbs keep the scroll gutter stable when the pointer leaves. */
+:root{--pi-scrollbar-thumb:#aab6c7;--pi-scrollbar-thumb-active:#7c8da5;scrollbar-width:thin;scrollbar-color:transparent transparent}
+:root:hover,:root[data-scroll-active]{scrollbar-color:var(--pi-scrollbar-thumb) transparent}
+body.pi-console-theme,body.pi-console-theme *{scrollbar-width:thin;scrollbar-color:transparent transparent}
+body.pi-console-theme:hover,body.pi-console-theme :hover,
+body.pi-console-theme :focus-visible,body.pi-console-theme [data-scroll-active]{scrollbar-color:var(--pi-scrollbar-thumb) transparent}
+body.pi-console-theme :active{scrollbar-color:var(--pi-scrollbar-thumb-active) transparent}
+body.pi-console-theme .admin-logs-terminal,body.pi-console-theme .business-run-log-output{--pi-scrollbar-thumb:#657892;--pi-scrollbar-thumb-active:#8b9cb3}
+body.pi-console-theme::-webkit-scrollbar,body.pi-console-theme ::-webkit-scrollbar{width:8px;height:8px}
+body.pi-console-theme::-webkit-scrollbar-track,body.pi-console-theme ::-webkit-scrollbar-track{background:transparent}
+body.pi-console-theme::-webkit-scrollbar-thumb,body.pi-console-theme ::-webkit-scrollbar-thumb{background:transparent;border:2px solid transparent;border-radius:8px;background-clip:padding-box}
+body.pi-console-theme:hover::-webkit-scrollbar-thumb,body.pi-console-theme :hover::-webkit-scrollbar-thumb,
+body.pi-console-theme :focus-visible::-webkit-scrollbar-thumb,body.pi-console-theme [data-scroll-active]::-webkit-scrollbar-thumb{background-color:var(--pi-scrollbar-thumb)}
+body.pi-console-theme ::-webkit-scrollbar-thumb:active{background-color:var(--pi-scrollbar-thumb-active)}
+body.pi-console-theme::-webkit-scrollbar-corner,body.pi-console-theme ::-webkit-scrollbar-corner{background:transparent}
+body.pi-console-theme::-webkit-scrollbar-button,body.pi-console-theme ::-webkit-scrollbar-button{display:none}
+@media(forced-colors:active){:root,body.pi-console-theme,body.pi-console-theme *{scrollbar-color:auto;scrollbar-width:auto}}

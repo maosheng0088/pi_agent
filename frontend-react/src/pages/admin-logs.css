@@ -1,0 +1,39 @@
+.admin-logs-page{display:flex;flex-direction:column;gap:16px;max-width:1560px;margin:0 auto;min-width:0}
+.admin-logs-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.admin-logs-heading h1{font-size:26px;margin:5px 0 8px;font-weight:650;letter-spacing:-.5px}
+.admin-logs-kicker{color:var(--semi-color-text-2);font-size:11px;font-weight:600;letter-spacing:1.2px}
+.admin-logs-heading p{margin:0;color:var(--semi-color-text-2);font-size:13px;line-height:1.8}
+.admin-logs-filters{display:grid;grid-template-columns:minmax(110px,.7fr) minmax(130px,.8fr) minmax(180px,1.3fr) minmax(180px,1fr) minmax(180px,1fr);gap:12px 16px;padding:18px;border:1px solid var(--semi-color-border);border-radius:10px;background:var(--semi-color-bg-2)}
+.admin-logs-filters>div{display:flex;flex-direction:column;gap:7px;min-width:0}
+.admin-logs-filters label{font-size:12px;font-weight:500;color:var(--semi-color-text-1)}
+.admin-logs-filters input[type=datetime-local]{box-sizing:border-box;width:100%;min-width:0;height:32px;border:1px solid transparent;border-radius:var(--semi-border-radius-small);padding:5px 9px;background:var(--semi-color-fill-0);color:var(--semi-color-text-0);font:inherit;font-size:12px}
+.admin-logs-filters input[type=datetime-local]:focus-visible{outline:2px solid var(--semi-color-primary);outline-offset:1px}
+.admin-logs-filters>.admin-logs-filter-actions{grid-column:1/-1;flex-direction:row;justify-content:flex-end;gap:8px}
+.admin-logs-controls{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.admin-logs-connection{display:flex;align-items:center;gap:7px;color:var(--semi-color-text-2);font-size:12px;line-height:1.7}
+.admin-logs-connection i{width:7px;height:7px;border-radius:50%;background:#8491a4;flex-shrink:0}
+.admin-logs-connection.live i{background:#249d72}.admin-logs-connection.reconnecting i{background:#db8b24}
+.admin-logs-terminal{height:clamp(340px,calc(100dvh - 410px),850px);min-height:340px;overflow:auto;overscroll-behavior:contain;padding:0 14px 14px;border:1px solid #26364a;border-radius:10px;background:#111a27;color:#e5eaf1;font-family:Consolas,'Cascadia Code',ui-monospace,SFMono-Regular,monospace;font-size:12px;line-height:1.8;min-width:0;scrollbar-color:#4b5c75 #111a27}
+.admin-logs-terminal:focus-visible{outline:2px solid var(--semi-color-primary);outline-offset:3px}
+.admin-logs-history{display:flex;justify-content:center;padding:10px 0 8px;border-bottom:1px solid #273447;margin-bottom:4px}
+.admin-logs-history .semi-button{color:#a9caff;min-height:32px}
+.admin-logs-history .semi-button-disabled{color:#8998ad}
+.admin-logs-entries{list-style:none;padding:0;margin:0}
+.admin-log-entry{border-bottom:1px solid #263246}
+.admin-log-entry summary{display:grid;grid-template-columns:155px 67px minmax(72px,110px) minmax(0,1fr);gap:10px;padding:9px 2px;list-style:none;cursor:pointer;align-items:start;min-width:0}
+.admin-log-entry summary::-webkit-details-marker{display:none}
+.admin-log-entry summary:focus-visible{outline:2px solid #90b9ff;outline-offset:-2px;border-radius:4px}
+.admin-log-entry summary:hover{background:#182538}
+.admin-log-time{color:#a5b2c5;font-size:11px;white-space:nowrap}
+.admin-log-level{font-size:11px;line-height:1.8;font-weight:600;color:#a3c7ff}
+.level-warning .admin-log-level{color:#f8c875}.level-error .admin-log-level,.level-critical .admin-log-level{color:#ff9a9a}.level-debug .admin-log-level{color:#b0b9ca}
+.admin-log-source{color:#bbc7d9;overflow-wrap:anywhere;font-size:11px;line-height:1.9}
+.admin-log-message{white-space:pre-wrap;overflow-wrap:anywhere;min-width:0;line-height:1.8}
+.admin-log-entry details[open] summary{background:#182538}
+.admin-log-details{margin:2px 0 12px 8px;padding:10px 12px;border-left:2px solid #587eac;background:#0c1421;color:#c2cedf;min-width:0}
+.admin-log-details>span{font-size:11px;color:#a9bad2}
+.admin-log-details pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 0;font-size:12px;line-height:1.8}
+.admin-logs-empty{display:flex;justify-content:center;align-items:center;gap:10px;color:#b2bfd2;padding:58px 18px;text-align:center;font-family:inherit}
+.admin-logs-footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--semi-color-text-2);font-size:12px;line-height:1.7}
+@media(max-width:1250px){.admin-logs-filters{grid-template-columns:1fr 1fr 1.4fr}.admin-logs-filters>.admin-logs-filter-actions{grid-column:auto;align-self:end}}
+@media(max-width:760px){.admin-logs-page{gap:13px;box-sizing:border-box;width:100%;padding-inline:14px}.admin-logs-heading h1{font-size:22px}.admin-logs-heading>.semi-space{width:100%;justify-content:flex-end}.admin-logs-filters{grid-template-columns:1fr 1fr;padding:14px;gap:12px}.admin-logs-filters>.admin-logs-query{grid-column:1/-1;grid-row:2}.admin-logs-filters>.admin-logs-filter-actions{grid-column:1/-1}.admin-logs-controls>.semi-space{width:100%;flex-wrap:wrap;justify-content:flex-end}.admin-logs-terminal{padding:0 10px 12px;height:430px}.admin-log-entry summary{grid-template-columns:1fr 65px 1fr;gap:5px 9px;padding:10px 2px}.admin-log-time{font-size:10px}.admin-log-message{grid-column:1/-1;padding-top:2px}.admin-log-level{font-size:10px}.admin-log-source{text-align:right;font-size:10px}.admin-logs-controls .semi-button{min-height:36px}.admin-logs-footer{font-size:11px}}

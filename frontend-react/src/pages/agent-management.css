@@ -1,0 +1,69 @@
+.agent-management-page{max-width:1520px;margin:0 auto;padding:30px 32px 40px;color:var(--semi-color-text-0)}
+.agent-trash-toolbar{display:flex;gap:12px;margin:20px 0 12px;align-items:center}
+.agent-trash-toolbar>.semi-input-wrapper{flex:1;min-width:0}
+.agent-trash-list{max-height:56dvh;overflow:auto;padding:0 2px}
+.agent-trash-row{display:flex;gap:14px;align-items:center;padding:18px 0;border-bottom:1px solid var(--semi-color-border)}
+.agent-trash-row:last-child{border-bottom:0}
+.agent-trash-identity{flex:1;min-width:0}
+.agent-trash-identity strong{font-size:14px;overflow-wrap:anywhere}
+.agent-trash-identity p,.agent-trash-identity small{margin:5px 0;color:var(--semi-color-text-2);font-size:12px;line-height:1.6}
+.agent-trash-actions{display:flex;gap:8px;flex-shrink:0}
+.agent-trash-modal .semi-button,.agent-trash-actions .semi-button{min-height:40px}
+.agent-trash-loading{display:flex;align-items:center;justify-content:center;gap:10px;min-height:180px;color:var(--semi-color-text-2)}
+.agent-trash-path{margin:18px 0;line-height:1.7;color:var(--semi-color-text-1);overflow-wrap:anywhere}
+.agent-trash-path code{font-size:12px}
+.agent-trash-identity .agent-trash-error{color:var(--semi-color-danger);overflow-wrap:anywhere}
+@media(max-width:600px){.agent-trash-row{flex-wrap:wrap}.agent-trash-actions{width:100%;justify-content:flex-end}.agent-management-heading>div:last-child{flex-wrap:wrap}}
+.agent-management-heading,.agent-management-heading>div:last-child,.agent-configuration-heading,.agent-panel-heading{display:flex;align-items:center;gap:12px}
+.agent-management-heading{justify-content:space-between;margin-bottom:24px;flex-wrap:wrap}
+.agent-management-heading h1{margin:7px 0 8px;font-size:24px;line-height:1.5}
+.agent-management-heading h1 small{font-size:14px;font-weight:400;color:var(--semi-color-text-2);margin-left:6px}
+.agent-management-heading p,.agent-configuration-heading p{margin:0;color:var(--semi-color-text-2);font-size:13px;line-height:1.8}
+.agent-management-page .semi-button{min-height:44px}
+.agent-management-layout{display:grid;grid-template-columns:256px minmax(0,1fr);gap:22px;align-items:start}
+.agent-management-list{padding:14px;background:var(--semi-color-bg-2);border:1px solid var(--semi-color-border);border-radius:10px;min-width:0}
+.agent-management-list>div:last-child{display:grid;gap:5px;margin-top:14px;max-height:72dvh;overflow:auto}
+.agent-management-list button{display:flex;align-items:center;gap:10px;width:100%;padding:12px 9px;border:1px solid transparent;border-radius:8px;background:transparent;text-align:left;cursor:pointer;font:inherit;color:var(--semi-color-text-1)}
+.agent-management-list button.selected{background:var(--semi-color-primary-light-default);border-color:var(--semi-color-primary-light-active)}
+.agent-management-list button:hover{background:var(--semi-color-fill-0)}
+.agent-management-list .agent-management-item-text{flex:1;min-width:0}
+.agent-management-list strong{display:block;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.agent-management-list small{display:block;font-size:12px;line-height:1.6;color:var(--semi-color-text-2);margin-top:4px}
+.agent-management-list button>.semi-icon{color:var(--semi-color-text-2);flex-shrink:0}
+.agent-management-detail{min-width:0;padding:22px 24px;background:var(--semi-color-bg-2);border:1px solid var(--semi-color-border);border-radius:10px}
+.agent-configuration-heading{margin-bottom:16px;flex-wrap:wrap}
+.agent-configuration-heading>div{flex:1;min-width:100px}
+.agent-configuration-heading h2{font-size:18px;margin:0 0 5px;line-height:1.6;overflow-wrap:anywhere}
+.agent-configuration-tabs>.semi-tabs-bar{overflow-x:auto;max-width:100%}
+.agent-configuration-tabs>.semi-tabs-content{padding-top:18px}
+.agent-configuration-tabs .semi-tabs-tab{min-height:44px;box-sizing:border-box}
+.agent-settings-panel{min-width:0}
+.agent-settings-panel .semi-banner{margin-bottom:16px}
+.agent-settings-panel form{max-width:760px}
+.agent-settings-panel .avatar-picker{margin-top:22px}
+.agent-execution-mode{border:0;padding:0;margin:24px 0;min-width:0}
+.agent-execution-mode legend{font-size:13px;font-weight:600;margin-bottom:12px}
+.agent-execution-mode p,.agent-settings-help{font-size:13px;color:var(--semi-color-text-2);line-height:1.8;margin:12px 0 18px;overflow-wrap:anywhere}
+.agent-assignment-list{display:grid;gap:10px;margin-bottom:20px}
+.agent-assignment-list article{display:flex;align-items:flex-start;gap:12px;padding:15px;border:1px solid var(--semi-color-border);border-radius:8px;min-width:0}
+.agent-assignment-list article>.semi-checkbox{margin-top:8px}
+.agent-assignment-list img{width:38px;height:38px;border-radius:8px;object-fit:cover;flex:none}
+.agent-assignment-list article>div{min-width:0;flex:1}
+.agent-assignment-list strong{font-size:13px;line-height:1.7;overflow-wrap:anywhere}
+.agent-assignment-list p{font-size:12px;color:var(--semi-color-text-2);line-height:1.8;margin:5px 0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere}
+.agent-assignment-list article>div>span{font-size:12px;color:var(--semi-color-text-2)}
+.agent-panel-heading{justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.agent-panel-heading p{font-size:13px;line-height:1.8;color:var(--semi-color-text-2)}
+.agent-roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.agent-roster>div{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--semi-color-border);border-radius:8px;min-width:0}
+.agent-roster>div>span{flex:1;font-size:13px;overflow-wrap:anywhere;min-width:0}
+.agent-roster small{font-size:12px;color:var(--semi-color-text-2)}
+.agent-channel-options{display:grid;gap:10px;margin:18px 0}
+.agent-channel-options>div{display:flex;align-items:center;gap:14px;padding:16px;border:1px solid var(--semi-color-border);border-radius:8px;min-width:0}
+.agent-channel-options strong,.agent-channel-options small{display:block;line-height:1.8;overflow-wrap:anywhere}
+.agent-channel-options small{font-size:12px;color:var(--semi-color-text-2)}
+.agent-workbench-embedded{min-width:0}.agent-workbench-embedded .semi-banner{margin-bottom:16px}
+.agent-workbench-embedded .workbench-split{grid-template-columns:minmax(180px,30%) minmax(0,1fr)}
+.agent-management-list button:focus-visible,.agent-management-page .semi-button:focus-visible{outline:2px solid var(--semi-color-primary);outline-offset:2px}
+@media(max-width:1000px){.agent-management-page{padding:24px 20px}.agent-management-layout{grid-template-columns:220px minmax(0,1fr);gap:14px}.agent-management-detail{padding:18px}.agent-workbench-embedded .workbench-split{grid-template-columns:1fr}.agent-workbench-embedded .workbench-list{border-right:0;border-bottom:1px solid var(--semi-color-border);max-height:230px}}
+@media(max-width:760px){.agent-management-page{padding:20px 14px}.agent-management-layout{grid-template-columns:1fr}.agent-management-list>div:last-child{max-height:200px}.agent-management-heading h1{font-size:21px}.agent-management-detail{padding:16px 14px}.agent-management-heading{margin-bottom:16px}.agent-configuration-heading h2{font-size:16px}.agent-roster{grid-template-columns:1fr}.agent-assignment-list article{gap:8px;padding:12px}.agent-assignment-list img{width:30px;height:30px}.agent-assignment-list article>.semi-button{padding:6px;font-size:12px}.agent-settings-panel .avatar-options.semi-radioGroup{grid-template-columns:repeat(3,minmax(0,1fr))}}

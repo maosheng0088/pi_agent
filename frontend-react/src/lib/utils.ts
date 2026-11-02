@@ -1,0 +1,3 @@
+export function initials(name=''){return name.trim().endsWith('管理员')?'管':name.trim().slice(-2)||'Pi'}
+export function tone(id=''){return [...id].reduce((sum,char)=>sum+char.charCodeAt(0),0)%6}
+export function clock(value?:string|number,full=false){if(!value)return '';const date=new Date(value);if(Number.isNaN(date.getTime()))return '';return full?date.toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false}):date.toLocaleDateString()===new Date().toLocaleDateString()?date.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false}):date.toLocaleDateString('zh-CN',{month:'2-digit',day:'2-digit'})}

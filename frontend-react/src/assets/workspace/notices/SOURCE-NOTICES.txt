@@ -1,0 +1,38 @@
+Pi Workspace adopted artwork notices
+Collected and reviewed: 2026-10-28
+
+Per-file provenance, exact adopted paths, original URLs and SHA-256 hashes:
+../SOURCES.json
+Public distribution directory: /asset-notices/workspace/
+
+Microsoft Fluent Color
+Author: Microsoft Corporation
+Project: https://github.com/microsoft/fluentui-system-icons
+License: MIT. The unmodified license is retained as MICROSOFT-MIT.txt.
+The adopted set contains 8 original SVG icons under roles/.
+
+vscode-icons
+Author: The vscode-icons Contributors
+Project: https://github.com/vscode-icons/vscode-icons
+License: MIT. The unmodified license is retained as vscode-icons-LICENSE.txt.
+The adopted set contains 14 original SVG file-type icons under files/.
+See vscode-icons-NOTICE.txt for collection details.
+
+Open Doodles
+Author: Pablo Stanley
+Source and official use statement: https://www.opendoodles.com/
+The official site states that these illustrations are free for commercial and
+personal use and no credit is required. This collection adopts reading-side.svg
+and sitting-reading.svg under illustrations/. Their exact original download
+URLs and hashes are recorded in SOURCES.json. No broader license claim is made.
+
+Channel and skill brand identifiers
+The three JPEG assets under brands/ are the original official App Store icons
+for WeChat, WeCom and Feishu, collected through Apple's public Lookup metadata.
+The individual application page, seller, bundle identifier and image URL are
+recorded in SOURCES.json. They identify existing channel/skill types only.
+No open-source license, partnership or endorsement is inferred for these brands.
+Their trademarks and associated copyrights remain with their respective owners.
+
+No employee portraits, DiceBear samples, UI reference screenshots, third-party
+stock photos or 3D preview assets are included in this adopted asset directory.

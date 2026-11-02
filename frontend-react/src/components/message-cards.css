@@ -1,0 +1,37 @@
+.pi-message-card{box-sizing:border-box;min-width:0;max-width:100%;margin:3px 0 10px;border:1px solid var(--semi-color-border);border-radius:10px;background:var(--semi-color-bg-2);overflow:hidden;color:var(--semi-color-text-0);box-shadow:0 2px 6px rgba(24,42,70,.035)}
+.pi-message-card-header{display:flex;align-items:center;gap:10px;min-width:0;padding:14px 16px;background:var(--semi-color-primary-light-default);border-bottom:1px solid var(--semi-color-border)}
+.pi-message-card-header>div{min-width:0;flex:1}
+.pi-message-card-header .semi-tag{flex-shrink:0;max-width:110px}
+.pi-message-card-symbol{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:31px;height:31px;border-radius:8px;background:var(--semi-color-bg-2);color:var(--semi-color-primary)}
+.pi-message-card-eyebrow{display:block;color:var(--semi-color-text-2);font-size:11px;line-height:1.5}
+.pi-message-card-header h4{margin:2px 0 0;font-size:14px;font-weight:600;line-height:1.6;overflow-wrap:anywhere}
+.pi-message-card.is-exception .pi-message-card-header{background:var(--semi-color-warning-light-default)}
+.pi-message-card.is-exception .pi-message-card-symbol{color:var(--semi-color-warning)}
+.pi-message-card.is-knowledge .pi-message-card-header{background:var(--semi-color-fill-0)}
+.pi-message-card-summary{margin:14px 16px;color:var(--semi-color-text-1);font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.pi-message-card-body{padding:14px 16px;min-width:0;border-top:1px solid var(--semi-color-border)}
+.pi-message-card-body .message-prose{font-size:13px;line-height:1.85}
+.pi-message-card-body .message-prose .code-block,.pi-message-card-body pre{max-width:100%;min-width:0}
+.pi-message-card-body .message-prose pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.pi-message-card-body .message-attachment,.pi-message-card-body .message-attachment-card,.pi-message-card-body .message-image-card{max-width:100%;min-width:0}
+.pi-message-card-body .message-attachment-card>a:first-child{min-width:0}
+.pi-message-card-body .message-attachment-card strong,.pi-message-card-body .message-attachment-card small{overflow-wrap:anywhere;white-space:normal}
+.pi-message-card-sources{list-style:none;padding:0;margin:0}
+.pi-message-card-sources li{display:flex;align-items:center;gap:12px;padding:13px 16px;border-top:1px solid var(--semi-color-border);min-width:0}
+.pi-message-card-sources li>div{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.pi-message-card-sources strong{font-size:13px;font-weight:500;line-height:1.7;overflow-wrap:anywhere}
+.pi-message-card-sources strong .semi-tag{margin-left:7px;vertical-align:middle}
+.pi-message-source-excerpt{margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap;font-size:12px;line-height:1.7;color:var(--semi-color-text-2)}
+.pi-message-card-sources span,.pi-message-card-sources small{font-size:12px;color:var(--semi-color-text-2);line-height:1.6;overflow-wrap:anywhere}
+.pi-message-card-sources .semi-button{flex-shrink:0;min-height:32px}
+.pi-message-card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-top:1px solid var(--semi-color-border)}
+.pi-message-card-footer>span{font-size:12px;color:var(--semi-color-text-2)}
+.pi-message-card-footer .semi-button{min-height:32px}
+.pi-message-long-preview{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--semi-color-text-1);font-size:13px;line-height:1.8;margin-bottom:10px}
+.pi-message-long-details{min-width:0}
+.pi-message-long-details>summary{cursor:pointer;color:var(--semi-color-primary);font-size:12px;line-height:1.8;padding:6px 0;list-style-position:inside}
+.pi-message-long-details[open]>summary{margin-bottom:12px}
+.pi-message-long-details>summary:focus-visible{outline:2px solid var(--semi-color-primary);outline-offset:3px}
+.pi-message-knowledge-stack{margin-top:13px;min-width:0}
+@media(max-width:640px){.pi-message-card-header{padding:12px;gap:8px;align-items:flex-start}.pi-message-card-header h4{font-size:13px}.pi-message-card-summary{margin:12px}.pi-message-card-body{padding:12px}.pi-message-card-sources li{padding:12px;align-items:flex-start;flex-wrap:wrap}.pi-message-card-sources li>div{flex-basis:180px}.pi-message-card-footer{padding:9px 10px;flex-wrap:wrap}.pi-message-card-sources .semi-button,.pi-message-card-footer .semi-button{min-height:36px}.pi-message-card-footer>span{font-size:11px}}
+@media(max-width:380px){.pi-message-card-header .semi-tag{max-width:90px}.pi-message-card-symbol{width:27px;height:27px}}

@@ -1,0 +1,23 @@
+.chat-maximized>.app-header,.chat-maximized .desktop-agents,.chat-maximized .conversation-header,.chat-maximized .agent-details{display:none!important}
+.chat-maximized .workspace-layout{height:100%;min-height:0}
+.chat-maximized .conversation-scroll{padding-top:60px}
+.chat-maximized .collaboration-compose-options>.semi-button,.chat-maximized .composer-caption{display:none}
+.restore-chat-button.semi-button{position:fixed;top:max(10px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));z-index:5;width:44px;height:44px;border:1px solid var(--semi-color-border);border-radius:10px;background:var(--semi-color-bg-2);box-shadow:0 3px 12px rgba(20,40,80,.08)}
+.restore-chat-button.semi-button:focus-visible,.maximize-chat-trigger.semi-button:focus-visible{outline:2px solid var(--semi-color-primary);outline-offset:3px}
+@media(max-width:500px){.conversation-header .conversation-actions>.semi-tooltip-wrapper:has(.maximize-chat-trigger){display:inline-flex}.chat-maximized .conversation-scroll{padding-top:60px}.restore-chat-button.semi-button{right:max(10px,env(safe-area-inset-right))}}
+
+.agents-collapsed .desktop-agents{display:none}
+.collapsed-agents-rail{width:48px;flex:none;border-right:1px solid var(--app-line);background:#f8faff;display:flex;justify-content:center;padding-top:14px}
+.collapsed-agents-rail .semi-button{width:40px;height:40px}
+.collapse-agents-button.semi-button{flex-shrink:0;width:32px;height:32px;padding:0}
+.header-collapsed .conversation-header{display:none}
+.header-collapsed .conversation-scroll{padding-top:58px}
+.expand-conversation-header.semi-button{position:absolute;top:10px;right:14px;width:40px;height:40px;z-index:3;border:1px solid var(--semi-color-border);background:var(--semi-color-bg-2);border-radius:8px}
+.chat-maximized .collapsed-agents-rail,.chat-maximized .expand-conversation-header{display:none}
+.expand-agents-button.semi-button:focus-visible,.collapse-agents-button.semi-button:focus-visible,.expand-conversation-header.semi-button:focus-visible,.collapse-conversation-header.semi-button:focus-visible{outline:2px solid var(--semi-color-primary);outline-offset:2px}
+@media(max-width:780px){.collapsed-agents-rail,.collapse-agents-button.semi-button{display:none}.expand-conversation-header.semi-button{width:44px;height:44px;right:max(10px,env(safe-area-inset-right))}.collapse-conversation-header.semi-button{min-width:32px}.header-collapsed .conversation-scroll{padding-top:62px}}
+@media(max-width:500px){.conversation-actions .semi-button[aria-label="打开智能体工作台"]{display:none}}
+
+.running-indicator.queued-indicator,.presence-dot.queued{background:var(--semi-color-warning)}
+.agent-list-text small.agent-status-running{color:var(--semi-color-primary)}
+.agent-list-text small.agent-status-queued{color:var(--semi-color-warning)}

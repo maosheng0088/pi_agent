@@ -1,0 +1,14 @@
+.message-long-reply{min-width:0;max-width:100%}
+.message-long-reply .pi-message-long-preview{margin:0 0 8px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.8;color:var(--semi-color-text-1)}
+.message-long-reply .pi-message-long-details{min-width:0;max-width:100%}
+.message-long-reply .pi-message-long-details>summary{box-sizing:border-box;min-height:44px;padding:10px 0;line-height:24px;cursor:pointer;list-style-position:inside;color:var(--semi-color-primary);font-size:13px;overflow-wrap:anywhere}
+.message-long-reply .pi-message-long-details>summary:hover{color:var(--semi-color-primary-hover)}
+.message-long-reply .pi-message-long-details>summary:focus-visible{outline:2px solid var(--semi-color-primary);outline-offset:2px;border-radius:4px}
+.message-long-reply .pi-message-long-details[open]>summary{margin-bottom:8px}
+.pi-message-folded-attachments{min-width:0;max-width:100%;margin-top:10px;padding-top:10px;border-top:1px solid var(--semi-color-border)}
+.pi-message-folded-attachment-label{display:block;margin-bottom:8px;font-size:12px;line-height:1.6;color:var(--semi-color-text-2)}
+.pi-message-folded-attachment-list{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0;max-width:100%}
+.pi-message-folded-attachment-list>.message-attachment,.pi-message-folded-attachment-list>.message-file-link{min-width:0;max-width:100%}
+.pi-message-folded-attachment-list .message-attachment-card,.pi-message-folded-attachment-list .message-image-card{max-width:100%;min-width:0}
+.pi-message-folded-attachment-list .message-attachment-card>a:first-child{min-width:0}
+.pi-message-folded-attachment-list strong,.pi-message-folded-attachment-list small{white-space:normal;overflow-wrap:anywhere}

@@ -1,0 +1,20 @@
+vscode-icons adopted file-type icon notices
+
+Collected and reviewed: 2026-10-28
+Project: https://github.com/vscode-icons/vscode-icons
+Project authors: Roberto Huertas; The vscode-icons Contributors
+License: MIT
+Original license source:
+https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE
+The original license is retained unchanged as vscode-icons-LICENSE.txt.
+
+This product adopts 14 unmodified SVG file-type icons under ../files/.
+Per-file source URLs, download URLs and SHA-256 hashes are recorded in
+../SOURCES.json, relative to this notices directory.
+
+These icons are used to identify file types in real rendered message links and
+existing skills. They do not create attachments, download permissions or task
+states. Product names, trademarks and logos remain with their respective owners.
+
+The manifest and notices are distributed at /asset-notices/workspace/;
+retain the license text with copies or substantial portions of these assets.

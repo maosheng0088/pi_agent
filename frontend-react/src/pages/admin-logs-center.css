@@ -1,0 +1,7 @@
+.admin-logs-center{min-width:0;max-width:1560px;margin:0 auto}
+.admin-logs-center>.semi-tabs{margin-bottom:20px}
+.admin-logs-center>.semi-tabs>.semi-tabs-content{display:none}
+.admin-logs-center-content{min-width:0}
+.admin-logs-conversations-note{margin:0 0 16px;font-size:13px;line-height:1.8;color:var(--semi-color-text-2);overflow-wrap:anywhere}
+.admin-logs-center-content>.react-administration{padding:0;max-width:none}
+@media(max-width:570px){.admin-logs-center>.semi-tabs{margin-bottom:16px}.admin-logs-conversations-note{font-size:12px}}

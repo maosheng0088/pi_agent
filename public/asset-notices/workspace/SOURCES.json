@@ -1,0 +1,752 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-28",
+  "purpose": "Only artwork adopted by the Pi Workspace frontend; original files and licenses retained.",
+  "publicNoticeBase": "/asset-notices/workspace/",
+  "counts": {
+    "assets": 27,
+    "svg": 24,
+    "brands": 3,
+    "roles": 8,
+    "illustrations": 2,
+    "fileTypes": 14
+  },
+  "securityReview": {
+    "method": "Static XML and source scan; SHA-256 verified against original collection manifests.",
+    "svgFilesChecked": 24,
+    "scriptsOrEventHandlers": 0,
+    "externalResources": 0,
+    "fontDependencies": 0
+  },
+  "assets": {
+    "brands/feishu-appstore-512.jpg": {
+      "brand": "飞书",
+      "sourceUrl": "https://apps.apple.com/cn/app/%E9%A3%9E%E4%B9%A6-%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E6%97%97%E4%B8%8B-ai-%E5%B7%A5%E4%BD%9C%E5%B9%B3%E5%8F%B0/id1401729613?uo=4",
+      "metadataUrl": "https://itunes.apple.com/lookup?id=414478124,1087897068,1401729613,930368978&country=cn",
+      "downloadUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/45/f4/d8/45f4d8ef-fc19-8e6e-19eb-4e1e4ee1aabd/AppIcon-0-0-1x_U007epad-0-0-0-1-0-0-85-220.png/512x512bb.jpg",
+      "sourceType": "官方AppStore公开资源",
+      "trackId": 1401729613,
+      "trackName": "飞书 - 字节跳动旗下 AI 工作平台",
+      "bundleId": "com.bytedance.ee.lark",
+      "sellerName": "Beijing Feishu Technology Co., Ltd.",
+      "contentType": "image/jpeg",
+      "format": "JPEG",
+      "width": 512,
+      "height": 512,
+      "sha256": "092e5b0bcbdb77e90abc901d600d04a408238a618611934b4295540cf03aa27e",
+      "file": "brands/feishu-appstore-512.jpg",
+      "importName": "feishu",
+      "bytes": 17718,
+      "sourceManifest": "design-previews/materials-expanded-20261028/brands-hd-manifest.json",
+      "sourceFile": "brands-hd/feishu-appstore-512.jpg",
+      "imported": true,
+      "modified": false,
+      "kind": "brand",
+      "collection": "Official App Store artwork",
+      "author": "Beijing Feishu Technology Co., Ltd.",
+      "license": "Brand identifier; no open-source license inferred",
+      "licenseFiles": [
+        "notices/SOURCE-NOTICES.txt"
+      ],
+      "usagePoints": [
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ]
+    },
+    "brands/wechat-appstore-512.jpg": {
+      "brand": "微信",
+      "sourceUrl": "https://apps.apple.com/cn/app/%E5%BE%AE%E4%BF%A1/id414478124?uo=4",
+      "metadataUrl": "https://itunes.apple.com/lookup?id=414478124,1087897068,1401729613,930368978&country=cn",
+      "downloadUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/84/6b/3a/846b3ab8-9dea-e3e5-861e-f6ecaa0b3387/AppIcon-0-0-1x_U007epad-0-1-0-sRGB-0-0-85-220.png/512x512bb.jpg",
+      "sourceType": "官方AppStore公开资源",
+      "trackId": 414478124,
+      "trackName": "微信",
+      "bundleId": "com.tencent.xin",
+      "sellerName": "Tencent Technology (Shenzhen) Company Limited",
+      "contentType": "image/jpeg",
+      "format": "JPEG",
+      "width": 512,
+      "height": 512,
+      "sha256": "c191157c5583055e7f2ec19f532b83f80d439f27f3809651151d8e8dcae1b019",
+      "file": "brands/wechat-appstore-512.jpg",
+      "importName": "weixin",
+      "bytes": 19462,
+      "sourceManifest": "design-previews/materials-expanded-20261028/brands-hd-manifest.json",
+      "sourceFile": "brands-hd/wechat-appstore-512.jpg",
+      "imported": true,
+      "modified": false,
+      "kind": "brand",
+      "collection": "Official App Store artwork",
+      "author": "Tencent Technology (Shenzhen) Company Limited",
+      "license": "Brand identifier; no open-source license inferred",
+      "licenseFiles": [
+        "notices/SOURCE-NOTICES.txt"
+      ],
+      "usagePoints": [
+        "components/ChannelMark.vue",
+        "components/ChannelsView.vue",
+        "components/CreateAgentDialog.vue",
+        "components/ChatView.vue"
+      ]
+    },
+    "brands/wecom-appstore-512.jpg": {
+      "brand": "企业微信",
+      "sourceUrl": "https://apps.apple.com/cn/app/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1/id1087897068?uo=4",
+      "metadataUrl": "https://itunes.apple.com/lookup?id=414478124,1087897068,1401729613,930368978&country=cn",
+      "downloadUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/3e/ba/6b/3eba6be1-a7fd-00c5-7f0d-2415c8258ef5/AppIcon-0-0-1x_U007epad-0-1-0-sRGB-85-220.png/512x512bb.jpg",
+      "sourceType": "官方AppStore公开资源",
+      "trackId": 1087897068,
+      "trackName": "企业微信",
+      "bundleId": "com.tencent.ww",
+      "sellerName": "Tencent Technology (Shenzhen) Company Limited",
+      "contentType": "image/jpeg",
+      "format": "JPEG",
+      "width": 512,
+      "height": 512,
+      "sha256": "3f22f0f911306ebebfd2775d47ed11032316fa651a03590c039c36b502941a29",
+      "file": "brands/wecom-appstore-512.jpg",
+      "importName": "wecom",
+      "bytes": 26827,
+      "sourceManifest": "design-previews/materials-expanded-20261028/brands-hd-manifest.json",
+      "sourceFile": "brands-hd/wecom-appstore-512.jpg",
+      "imported": true,
+      "modified": false,
+      "kind": "brand",
+      "collection": "Official App Store artwork",
+      "author": "Tencent Technology (Shenzhen) Company Limited",
+      "license": "Brand identifier; no open-source license inferred",
+      "licenseFiles": [
+        "notices/SOURCE-NOTICES.txt"
+      ],
+      "usagePoints": [
+        "components/ChannelMark.vue",
+        "components/ChannelsView.vue",
+        "components/CreateAgentDialog.vue",
+        "components/ChatView.vue"
+      ]
+    },
+    "files/file_type_csv.svg": {
+      "label": "CSV 数据",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_csv.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_csv.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "d9ae79508947257e90fa245ecffb550bab7837a6561da27841a701514003dd2c",
+      "file": "files/file_type_csv.svg",
+      "importName": "csv",
+      "bytes": 421,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_csv.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_excel.svg": {
+      "label": "Excel 表格",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_excel.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_excel.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "eb813b25b79444c6af9f77048129bf21705df600d5fe56ea932712de277e1955",
+      "file": "files/file_type_excel.svg",
+      "importName": "excel",
+      "bytes": 1644,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_excel.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_html.svg": {
+      "label": "HTML 网页",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_html.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_html.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "6a5cfad64d74cee26abfb808dc62c17d0e4644412e63e44f4743833164b8e6e4",
+      "file": "files/file_type_html.svg",
+      "importName": "html",
+      "bytes": 544,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_html.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_image.svg": {
+      "label": "图片",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_image.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_image.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "c5c20aeb38494b7790fe99c6eb6808a41212efff8179dd9dab068239ca5de680",
+      "file": "files/file_type_image.svg",
+      "importName": "picture",
+      "bytes": 349,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_image.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_js.svg": {
+      "label": "JavaScript",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_js.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_js.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "e7deb5454d3546610e8f713201a5cc48d59b50aa9d7cc31fc28c38b7c4f61f00",
+      "file": "files/file_type_js.svg",
+      "importName": "javascript",
+      "bytes": 641,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_js.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_json.svg": {
+      "label": "JSON 配置",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_json.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_json.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "d33c55591c627feb212664fbee28fa7ed002e4c3c2b5dfa21ea5bc714e744a39",
+      "file": "files/file_type_json.svg",
+      "importName": "json",
+      "bytes": 1384,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_json.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_markdown.svg": {
+      "label": "Markdown 文档",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_markdown.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_markdown.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "eae21ad9763bc5a13898ded2d105937d07f577bb9799825d777bd5607cd99f20",
+      "file": "files/file_type_markdown.svg",
+      "importName": "markdown",
+      "bytes": 319,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_markdown.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_pdf.svg": {
+      "label": "PDF 文档",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_pdf.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_pdf.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "5653a913cdb9e51a809c616b565ecf2e716791378b8fa7ce0c8af8802af25142",
+      "file": "files/file_type_pdf.svg",
+      "importName": "pdf",
+      "bytes": 4790,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_pdf.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_powerpoint.svg": {
+      "label": "PowerPoint 演示文稿",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_powerpoint.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_powerpoint.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "755571a5eac482ad1e0ea43a8b83ac52cb6560be1c0b52501d6c550422a549a2",
+      "file": "files/file_type_powerpoint.svg",
+      "importName": "powerpoint",
+      "bytes": 1903,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_powerpoint.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_python.svg": {
+      "label": "Python 脚本",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_python.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_python.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "9734223a0f9083254f8a1f0f79870790446d22e2aa7509b10ebffec19093d649",
+      "file": "files/file_type_python.svg",
+      "importName": "python",
+      "bytes": 1213,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_python.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_sql.svg": {
+      "label": "SQL 数据库",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_sql.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_sql.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "f4f0a132fdee919b4d212b70097d6b12d52090185366dc666a447a261830c5dc",
+      "file": "files/file_type_sql.svg",
+      "importName": "sql",
+      "bytes": 882,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_sql.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_typescript.svg": {
+      "label": "TypeScript",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_typescript.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_typescript.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "7bfda6366d5cbe281eb4224a80c57b96583662cdca310d110b14a53d73a5b7a8",
+      "file": "files/file_type_typescript.svg",
+      "importName": "typescript",
+      "bytes": 909,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_typescript.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_word.svg": {
+      "label": "Word 文档",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_word.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_word.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "3bc0ae0256ca978c8614eea9ce79eb08fb5b5d4521e81f40561af003e1842459",
+      "file": "files/file_type_word.svg",
+      "importName": "word",
+      "bytes": 1696,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_word.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "files/file_type_zip.svg": {
+      "label": "ZIP 压缩包",
+      "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_zip.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_zip.svg",
+      "author": "The vscode-icons Contributors",
+      "collection": "vscode-icons",
+      "license": "MIT",
+      "sha256": "31ac191b609fb6727c0a7744edb86e5aff747ca3c9ddc9cafc96b90980cb93e2",
+      "file": "files/file_type_zip.svg",
+      "importName": "archive",
+      "bytes": 4005,
+      "sourceManifest": "design-previews/materials-expanded-20261028/file-icons-manifest.json",
+      "sourceFile": "file-icons/file_type_zip.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/FileIcon.vue",
+        "components/MessageContent.vue"
+      ],
+      "licenseUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE",
+      "licenseFiles": [
+        "notices/vscode-icons-LICENSE.txt",
+        "notices/vscode-icons-NOTICE.txt"
+      ]
+    },
+    "illustrations/reading-side.svg": {
+      "label": "阅读与资料整理",
+      "kind": "illustration",
+      "collection": "Open Doodles",
+      "author": "Pablo Stanley",
+      "license": "Official free commercial/personal use statement",
+      "licenseUrl": "https://www.opendoodles.com/",
+      "sourceUrl": "https://www.opendoodles.com/",
+      "downloadUrl": "https://opendoodles.s3-us-west-1.amazonaws.com/reading-side.svg",
+      "sha256": "bc98d93429c03fe206050649841d0cecab51c928fcb6f7e842ff4af6a5585593",
+      "file": "illustrations/reading-side.svg",
+      "importName": "reading",
+      "bytes": 60495,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "reading-side.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/ChatView.vue"
+      ],
+      "licenseFiles": [
+        "notices/SOURCE-NOTICES.txt"
+      ]
+    },
+    "illustrations/sitting-reading.svg": {
+      "label": "开始协作",
+      "kind": "illustration",
+      "collection": "Open Doodles",
+      "author": "Pablo Stanley",
+      "license": "Official free commercial/personal use statement",
+      "licenseUrl": "https://www.opendoodles.com/",
+      "sourceUrl": "https://www.opendoodles.com/",
+      "downloadUrl": "https://opendoodles.s3-us-west-1.amazonaws.com/sitting-reading.svg",
+      "sha256": "957f2c9047d12fed332378f307609990934403b4e2421f49d027d6793faa81d5",
+      "file": "illustrations/sitting-reading.svg",
+      "importName": "collaboration",
+      "bytes": 80309,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "sitting-reading.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/ChatView.vue",
+        "components/AuthView.vue"
+      ],
+      "licenseFiles": [
+        "notices/SOURCE-NOTICES.txt"
+      ]
+    },
+    "roles/bot_sparkle.svg": {
+      "label": "智能体助手",
+      "kind": "icon",
+      "collection": "Microsoft Fluent Color",
+      "author": "Microsoft Corporation",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+      "sourceUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/assets/Bot%20Sparkle/SVG/ic_fluent_bot_sparkle_24_color.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Bot%20Sparkle/SVG/ic_fluent_bot_sparkle_24_color.svg",
+      "sha256": "2649957805c5f1e031d91f4ed2df1dbc7ae52b686b7b555d7a35ad7cdbdc42a2",
+      "file": "roles/bot_sparkle.svg",
+      "importName": "assistant",
+      "bytes": 8299,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "bot_sparkle.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/AgentAvatar.vue",
+        "App.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseFiles": [
+        "notices/MICROSOFT-MIT.txt"
+      ]
+    },
+    "roles/briefcase.svg": {
+      "label": "商务与报价",
+      "kind": "icon",
+      "collection": "Microsoft Fluent Color",
+      "author": "Microsoft Corporation",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+      "sourceUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/assets/Briefcase/SVG/ic_fluent_briefcase_48_color.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Briefcase/SVG/ic_fluent_briefcase_48_color.svg",
+      "sha256": "2a60948dad6967f399a8960d4a5995074300a544e2f75d4a44ddfd3db61b1462",
+      "file": "roles/briefcase.svg",
+      "importName": "business",
+      "bytes": 2279,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "briefcase.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/AgentAvatar.vue",
+        "App.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseFiles": [
+        "notices/MICROSOFT-MIT.txt"
+      ]
+    },
+    "roles/calendar_clock.svg": {
+      "label": "定时任务",
+      "kind": "icon",
+      "collection": "Microsoft Fluent Color",
+      "author": "Microsoft Corporation",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+      "sourceUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/assets/Calendar%20Clock/SVG/ic_fluent_calendar_clock_24_color.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Calendar%20Clock/SVG/ic_fluent_calendar_clock_24_color.svg",
+      "sha256": "9ef1b7f1038adf6f1b8f4267283edf7aac0d3eb4cc80f1da0242cec5c77504ec",
+      "file": "roles/calendar_clock.svg",
+      "importName": "calendar",
+      "bytes": 2581,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "calendar_clock.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/AgentAvatar.vue",
+        "App.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseFiles": [
+        "notices/MICROSOFT-MIT.txt"
+      ]
+    },
+    "roles/chat_multiple.svg": {
+      "label": "消息协作",
+      "kind": "icon",
+      "collection": "Microsoft Fluent Color",
+      "author": "Microsoft Corporation",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+      "sourceUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/assets/Chat%20Multiple/SVG/ic_fluent_chat_multiple_24_color.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Chat%20Multiple/SVG/ic_fluent_chat_multiple_24_color.svg",
+      "sha256": "b4e6a9d72ca52c1c6b6a3f44636e0714aaa288f6f9f49932430b8fc2afcaf968",
+      "file": "roles/chat_multiple.svg",
+      "importName": "conversation",
+      "bytes": 1671,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "chat_multiple.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/AgentAvatar.vue",
+        "App.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseFiles": [
+        "notices/MICROSOFT-MIT.txt"
+      ]
+    },
+    "roles/data_trending.svg": {
+      "label": "业务分析",
+      "kind": "icon",
+      "collection": "Microsoft Fluent Color",
+      "author": "Microsoft Corporation",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+      "sourceUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/assets/Data%20Trending/SVG/ic_fluent_data_trending_48_color.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Data%20Trending/SVG/ic_fluent_data_trending_48_color.svg",
+      "sha256": "8791ddf4865412924a3959a6e13fcd43720eb239653148958e95c66b0f8d9a81",
+      "file": "roles/data_trending.svg",
+      "importName": "analytics",
+      "bytes": 1400,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "data_trending.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/AgentAvatar.vue",
+        "App.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseFiles": [
+        "notices/MICROSOFT-MIT.txt"
+      ]
+    },
+    "roles/database.svg": {
+      "label": "数据与表格",
+      "kind": "icon",
+      "collection": "Microsoft Fluent Color",
+      "author": "Microsoft Corporation",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+      "sourceUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/assets/Database/SVG/ic_fluent_database_48_color.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Database/SVG/ic_fluent_database_48_color.svg",
+      "sha256": "9d0d93c81d819f13a9541286d35bf0fc7c7993721aca91e4ff5945a1d98f5b7c",
+      "file": "roles/database.svg",
+      "importName": "database",
+      "bytes": 2004,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "database.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/AgentAvatar.vue",
+        "App.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseFiles": [
+        "notices/MICROSOFT-MIT.txt"
+      ]
+    },
+    "roles/document.svg": {
+      "label": "单证与文件",
+      "kind": "icon",
+      "collection": "Microsoft Fluent Color",
+      "author": "Microsoft Corporation",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+      "sourceUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/assets/Document/SVG/ic_fluent_document_48_color.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/Document/SVG/ic_fluent_document_48_color.svg",
+      "sha256": "806eaefed45088137496309ce60c9b5d994059f55ed386f92e323ed4752d5d0c",
+      "file": "roles/document.svg",
+      "importName": "document",
+      "bytes": 1291,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "document.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/AgentAvatar.vue",
+        "App.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseFiles": [
+        "notices/MICROSOFT-MIT.txt"
+      ]
+    },
+    "roles/people_team.svg": {
+      "label": "团队协作",
+      "kind": "icon",
+      "collection": "Microsoft Fluent Color",
+      "author": "Microsoft Corporation",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/LICENSE",
+      "sourceUrl": "https://github.com/microsoft/fluentui-system-icons/blob/main/assets/People%20Team/SVG/ic_fluent_people_team_48_color.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/microsoft/fluentui-system-icons/main/assets/People%20Team/SVG/ic_fluent_people_team_48_color.svg",
+      "sha256": "581190a76d64a1b8ed82d2bcb292c023131c140227529f11f147ef71e03734e2",
+      "file": "roles/people_team.svg",
+      "importName": "team",
+      "bytes": 6352,
+      "sourceManifest": "design-previews/materials-20261028/manifest.json",
+      "sourceFile": "people_team.svg",
+      "imported": true,
+      "modified": false,
+      "usagePoints": [
+        "components/AgentAvatar.vue",
+        "App.vue",
+        "components/ChatView.vue",
+        "components/AutomationView.vue"
+      ],
+      "licenseFiles": [
+        "notices/MICROSOFT-MIT.txt"
+      ]
+    }
+  },
+  "notices": {
+    "microsoft": "notices/MICROSOFT-MIT.txt",
+    "vscodeIconsLicense": "notices/vscode-icons-LICENSE.txt",
+    "vscodeIconsNotice": "notices/vscode-icons-NOTICE.txt",
+    "otherSources": "notices/SOURCE-NOTICES.txt"
+  }
+}

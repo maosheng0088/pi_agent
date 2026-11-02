@@ -1,0 +1,17 @@
+import fs from 'node:fs/promises';
+import {createWriteStream} from 'node:fs';
+import {Readable} from 'node:stream';
+import {pipeline} from 'node:stream/promises';
+import crypto from 'node:crypto';
+const root='D:/code/pi-web/.tools/android';
+const api='https://api.azul.com/metadata/v1/zulu/packages/?java_version=17&os=windows&arch=x86_64&archive_type=zip&java_package_type=jdk&javafx_bundled=false&release_status=ga&availability_types=CA&latest=true';
+const response=await fetch(api,{signal:AbortSignal.timeout(30000)});if(!response.ok)throw new Error(`Azul metadata ${response.status}`);
+const list=await response.json();const item=list.find(p=>p.name.includes('win_x64')&&!p.name.includes('fx'));
+if(!item)throw new Error('No matching Windows JDK');
+const details=await (await fetch(`https://api.azul.com/metadata/v1/zulu/packages/${item.package_uuid}`,{signal:AbortSignal.timeout(30000)})).json();
+const hash=details.sha256_hash;if(!/^[0-9a-f]{64}$/i.test(hash))throw new Error('JDK checksum unavailable');
+await fs.writeFile(`${root}/jdk-zulu.json`,JSON.stringify({...item,checksum:hash},null,2));
+const download=await fetch(item.download_url,{signal:AbortSignal.timeout(300000)});if(!download.ok)throw new Error(`JDK HTTP ${download.status}`);
+await pipeline(Readable.fromWeb(download.body),createWriteStream(`${root}/jdk-zulu.zip.part`));
+const bytes=await fs.readFile(`${root}/jdk-zulu.zip.part`);if(crypto.createHash('sha256').update(bytes).digest('hex')!==hash)throw new Error('JDK checksum mismatch');
+await fs.rename(`${root}/jdk-zulu.zip.part`,`${root}/jdk-zulu.zip`);console.log({jdk:item.name,bytes:bytes.length,verified:true});
