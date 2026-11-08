@@ -1,0 +1,1 @@
+-keep class asia.junweirpa.piconsole.mobile.** { *; }
