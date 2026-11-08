@@ -1,0 +1,12 @@
+{
+  "versionName": "0.1.0",
+  "versionCode": 1,
+  "applicationId": "asia.junweirpa.piconsole.android",
+  "minSdk": 26,
+  "targetSdk": 35,
+  "server": "https://ai.junweirpa.asia/",
+  "file": "PiConsole-Android-0.1.0.apk",
+  "size": 29323,
+  "sha256": "fe83b3322541f688f48bd93c3fcc2d307e38477485dbcef2f21707450ccd597d",
+  "builtAt": "2026-11-01T15:56:34.941Z"
+}

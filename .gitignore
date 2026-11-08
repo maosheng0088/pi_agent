@@ -20,43 +20,17 @@ desktop/release/
 android/build/
 android/release/
 
-# Private data, generated files and signing credentials
-agents/
-qa/
-design-previews/
-**/__pycache__/
-*.pyc
-*.pyo
-*.sqlite
-*.sqlite-*
-*.db
-*.db-*
-*.jsonl
-!test/**/fixtures/**/*.jsonl
-!vendor/pi/packages/**/test/fixtures/**/*.jsonl
-.env
-.env.*
-!.env.example
-!.env.*.example
-*.pem
-*.key
-*.pfx
-*.p12
-*.jks
-*.keystore
-*.exe
-*.msi
-*.apk
-*.aab
-*.dmg
-*.node
-*.tsbuildinfo
-*.cpuprofile
-**/.cache/
-**/.vite/
-**/coverage/
-public/android/
+# Release binaries - rebuilt by the release pipeline (116 MB installers exceed the 100 MB host limit)
 public/desktop-updates/
-public/materials*/
-cloud-document-skills/packages/
-vendor/pi/packages/ai/src/providers/data/
+public/android/*.apk
+public/android/*.apk.sha256
+
+# Third-party UI reference captures - internal research only, not redistributable
+design-previews/**/ui-references/
+design-previews/**/ui-references-manifest.json
+design-previews/**/ui-reference-board.png
+design-previews/**/ui-reference-board.svg
+design-previews/**/pi-ui-materials-*.zip
+design-previews/**/3dicons-*-source.html
+design-previews/**/designer-references/
+public/materials-expanded-20261028/

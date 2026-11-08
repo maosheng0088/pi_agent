@@ -186,8 +186,8 @@ export class WorkspaceStore {
       if(toolViewFromHash(location.hash)!=='ocean'){const url=new URL(location.href);url.hash='view=ocean&tool=track';history.replaceState(null,'',url)}
     }else if(view==='tools'){
       const url=new URL(location.href);url.hash='view=tools';history.replaceState(null,'',url)
-    }else if(view==='agents'){
-      const url=new URL(location.href);url.hash='view=agents';history.replaceState(null,'',url)
+    }else if(view==='agents'||view==='mailbox'){
+      const url=new URL(location.href);url.hash=`view=${view}`;history.replaceState(null,'',url)
     }else if(workspaceViewFromHash(location.hash))this.hash(this.state.current?.id)
     this.patch({view})
   }

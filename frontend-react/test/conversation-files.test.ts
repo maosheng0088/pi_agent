@@ -9,7 +9,7 @@ const link=`[预约报告.csv](${url}?name=${encodeURIComponent(attachment.name)
 
 describe('conversation file index',()=>{
  it('collects staff uploads and generated files, deduplicating by attachment identity',()=>{
-  const messages:Message[]=[{role:'user',content:'请核对',authorName:'示例员工001',attachments:[attachment]},
+  const messages:Message[]=[{role:'user',content:'请核对',authorName:'小敏',attachments:[attachment]},
    {role:'assistant',content:link},{role:'assistant',content:`已更新：${link}`,timestamp:'2026-11-01T06:00:00Z'}]
   const files=conversationFiles(messages,'alpha','检查助手')
   expect(files).toHaveLength(1)

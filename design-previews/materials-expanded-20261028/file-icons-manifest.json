@@ -1,0 +1,178 @@
+[
+  {
+    "label": "Excel 表格",
+    "file": "file-icons/file_type_excel.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_excel.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_excel.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "eb813b25b79444c6af9f77048129bf21705df600d5fe56ea932712de277e1955"
+  },
+  {
+    "label": "CSV 数据",
+    "file": "file-icons/file_type_csv.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_csv.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_csv.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "d9ae79508947257e90fa245ecffb550bab7837a6561da27841a701514003dd2c"
+  },
+  {
+    "label": "PDF 文档",
+    "file": "file-icons/file_type_pdf.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_pdf.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_pdf.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "5653a913cdb9e51a809c616b565ecf2e716791378b8fa7ce0c8af8802af25142"
+  },
+  {
+    "label": "Word 文档",
+    "file": "file-icons/file_type_word.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_word.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_word.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "3bc0ae0256ca978c8614eea9ce79eb08fb5b5d4521e81f40561af003e1842459"
+  },
+  {
+    "label": "PowerPoint 演示文稿",
+    "file": "file-icons/file_type_powerpoint.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_powerpoint.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_powerpoint.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "755571a5eac482ad1e0ea43a8b83ac52cb6560be1c0b52501d6c550422a549a2"
+  },
+  {
+    "label": "ZIP 压缩包",
+    "file": "file-icons/file_type_zip.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_zip.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_zip.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "31ac191b609fb6727c0a7744edb86e5aff747ca3c9ddc9cafc96b90980cb93e2"
+  },
+  {
+    "label": "JSON 配置",
+    "file": "file-icons/file_type_json.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_json.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_json.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "d33c55591c627feb212664fbee28fa7ed002e4c3c2b5dfa21ea5bc714e744a39"
+  },
+  {
+    "label": "Python 脚本",
+    "file": "file-icons/file_type_python.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_python.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_python.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "9734223a0f9083254f8a1f0f79870790446d22e2aa7509b10ebffec19093d649"
+  },
+  {
+    "label": "Markdown 文档",
+    "file": "file-icons/file_type_markdown.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_markdown.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_markdown.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "eae21ad9763bc5a13898ded2d105937d07f577bb9799825d777bd5607cd99f20"
+  },
+  {
+    "label": "图片",
+    "file": "file-icons/file_type_image.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_image.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_image.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "c5c20aeb38494b7790fe99c6eb6808a41212efff8179dd9dab068239ca5de680"
+  },
+  {
+    "label": "文件夹",
+    "file": "file-icons/default_folder.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/default_folder.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/default_folder.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "7cdbc6c865504e97b3f19eb9400ff7bf3de6c44458d2e56f14a7810e7d8d4a63"
+  },
+  {
+    "label": "打开的文件夹",
+    "file": "file-icons/default_folder_opened.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/default_folder_opened.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/default_folder_opened.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "7e5dd1d22ebc781f5e5a20be730a282bf68eb072f9a22d62f8fcfd8656c08401"
+  },
+  {
+    "label": "SQL 数据库",
+    "file": "file-icons/file_type_sql.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_sql.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_sql.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "f4f0a132fdee919b4d212b70097d6b12d52090185366dc666a447a261830c5dc"
+  },
+  {
+    "label": "TypeScript",
+    "file": "file-icons/file_type_typescript.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_typescript.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_typescript.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "7bfda6366d5cbe281eb4224a80c57b96583662cdca310d110b14a53d73a5b7a8"
+  },
+  {
+    "label": "JavaScript",
+    "file": "file-icons/file_type_js.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_js.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_js.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "e7deb5454d3546610e8f713201a5cc48d59b50aa9d7cc31fc28c38b7c4f61f00"
+  },
+  {
+    "label": "HTML 网页",
+    "file": "file-icons/file_type_html.svg",
+    "sourceUrl": "https://github.com/vscode-icons/vscode-icons/blob/master/icons/file_type_html.svg",
+    "downloadUrl": "https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/icons/file_type_html.svg",
+    "author": "The vscode-icons Contributors",
+    "collection": "vscode-icons",
+    "license": "MIT",
+    "licenseFile": "file-icons/vscode-icons-LICENSE",
+    "sha256": "6a5cfad64d74cee26abfb808dc62c17d0e4644412e63e44f4743833164b8e6e4"
+  }
+]

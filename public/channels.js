@@ -6,7 +6,7 @@ export function createChannelsController({ $, api, state, node, icon, toast, com
       <div class="dialog-header"><div><span class="eyebrow">MESSAGE CHANNELS</span><h2 id="channels-title">消息渠道</h2><p>让个人微信、企业微信与指定群聊互通。</p></div><button class="icon-button" type="button" data-channel-close="channels-dialog" aria-label="关闭消息渠道"><span data-icon="x"></span></button></div>
       <div class="dialog-body"><div id="channels-error" class="settings-error" role="alert" tabindex="-1" hidden></div>
         <div class="channel-notice"><span data-icon="info"></span><p>仅管理员可配置渠道。每个渠道仅绑定一个 Web 群聊，绑定后互通新消息，不会同步历史记录。企业微信需要另外选择机器人可访问的外部会话。</p></div>
-        <form id="channel-create-form" class="channel-create-form"><div class="channel-create-fields"><div class="form-field"><label for="channel-create-type">渠道类型</label><select id="channel-create-type" name="type"><option value="weixin">个人微信 · 扫码登录</option><option value="wecom">企业微信智能机器人 · 长连接</option></select></div><div class="form-field"><label for="channel-create-name">渠道名称</label><input id="channel-create-name" name="name" required maxlength="80" autocomplete="off" placeholder="例如：示例员工001的微信"></div><div id="channel-create-wecom" hidden><div class="form-field"><label for="channel-create-bot-id">Bot ID</label><input id="channel-create-bot-id" name="botId" maxlength="256" autocomplete="off" spellcheck="false"></div><div class="form-field"><label for="channel-create-secret">Secret</label><div class="password-field"><input id="channel-create-secret" name="secret" type="password" maxlength="1024" autocomplete="new-password" spellcheck="false"><button id="channel-create-secret-toggle" type="button" class="icon-button" aria-label="显示 Secret" aria-pressed="false"><span data-icon="eye"></span></button></div></div><p class="channel-note">在企业微信后台创建智能机器人，选择 API 模式的长连接方式，复制 Bot ID 和 Secret。无需 Webhook、回调地址或 Corp ID。</p></div><p id="channel-create-hint" class="channel-note">添加后使用本人微信扫码登录。</p></div><button class="primary-button" id="channel-create-submit" type="submit"><span data-icon="plus"></span>添加渠道</button></form>
+        <form id="channel-create-form" class="channel-create-form"><div class="channel-create-fields"><div class="form-field"><label for="channel-create-type">渠道类型</label><select id="channel-create-type" name="type"><option value="weixin">个人微信 · 扫码登录</option><option value="wecom">企业微信智能机器人 · 长连接</option></select></div><div class="form-field"><label for="channel-create-name">渠道名称</label><input id="channel-create-name" name="name" required maxlength="80" autocomplete="off" placeholder="例如：小敏的微信"></div><div id="channel-create-wecom" hidden><div class="form-field"><label for="channel-create-bot-id">Bot ID</label><input id="channel-create-bot-id" name="botId" maxlength="256" autocomplete="off" spellcheck="false"></div><div class="form-field"><label for="channel-create-secret">Secret</label><div class="password-field"><input id="channel-create-secret" name="secret" type="password" maxlength="1024" autocomplete="new-password" spellcheck="false"><button id="channel-create-secret-toggle" type="button" class="icon-button" aria-label="显示 Secret" aria-pressed="false"><span data-icon="eye"></span></button></div></div><p class="channel-note">在企业微信后台创建智能机器人，选择 API 模式的长连接方式，复制 Bot ID 和 Secret。无需 Webhook、回调地址或 Corp ID。</p></div><p id="channel-create-hint" class="channel-note">添加后使用本人微信扫码登录。</p></div><button class="primary-button" id="channel-create-submit" type="submit"><span data-icon="plus"></span>添加渠道</button></form>
         <div class="channel-list-heading"><h3>已添加的渠道</h3><button class="secondary-button" id="channels-refresh" type="button"><span data-icon="refresh"></span>刷新</button></div>
         <p id="channels-status" class="channel-note" role="status"></p><div id="channels-list" class="channel-list"></div>
       </div><div class="dialog-footer"><span>个人微信扫码 · 企业微信长连接</span><button class="secondary-button" type="button" data-channel-close="channels-dialog">完成</button></div>
@@ -41,9 +41,11 @@ export function createChannelsController({ $, api, state, node, icon, toast, com
   const valid = snapshot => company.isAdmin() && snapshot?.user === state.user?.id && snapshot?.epoch === state.identityEpoch;
   const error = (id, text = '', focus = true) => { $(id).textContent = text; $(id).hidden = !text; if (text && focus) $(id).focus(); };
   const isWecom = channel => channel?.type === 'wecom';
+  const isWebhookOnly = channel => isWecom(channel) && channel.connectionMode === 'webhook';
   const labels = { idle: '未登录', login_required: '需重新登录', disconnected: '未登录', unconfigured: '未登录', connecting: '待扫码', waiting: '待扫码', waiting_scan: '待扫码', wait: '待扫码', scaned: '待确认', scanned: '待确认', scaned_but_redirect: '确认处理中', binded_redirect: '确认处理中', confirmed: '已连接', connected: '已连接', paused: '暂停', disabled: '暂停', expired: '需重新登录', error: '连接异常', need_verify: '待手机验证', need_verifycode: '待手机验证', verify_code_blocked: '需重新扫码', unavailable: '不可用' };
   function channelState(channel) {
     if (channel.enabled === false) return { label: '暂停', tone: 'paused' };
+    if (isWebhookOnly(channel)) return { label: channel.webhookSet ? '已配置' : '待配置', tone: channel.webhookSet ? 'connected' : 'idle' };
     if (channel.connected) return { label: '已连接', tone: 'connected' };
     if (isWecom(channel)) return { label: channel.status === 'connecting' ? '连接中' : channel.status === 'unconfigured' || !channel.secretSet ? '待配置' : channel.status === 'error' ? '连接异常' : '未连接', tone: channel.status === 'error' ? 'error' : 'idle' };
     return { label: labels[channel.status] || '未登录', tone: ['expired', 'error', 'unavailable', 'verify_code_blocked'].includes(channel.status) ? 'error' : 'idle' };
@@ -131,12 +133,13 @@ export function createChannelsController({ $, api, state, node, icon, toast, com
     view.title.textContent = channel.name; view.account.textContent = isWecom(channel) ? `企业微信${channel.botId ? ` · ${channel.botId}` : ''}` : channel.accountLabel || '个人微信';
     view.status.textContent = status.label; view.status.className = `channel-badge ${status.tone}`;
     view.binding.textContent = channel.sessionId ? `绑定群聊：${channel.sessionTitle || '已绑定群聊'}` : '尚未绑定群聊';
-    view.context.hidden = isWecom(channel) ? !!channel.target : !(channel.connected && channel.canReceive === false);
-    view.context.textContent = isWecom(channel) ? '尚未选择企业微信会话。请在配置中刷新并选择目标企微群或私聊，再保存。' : '微信已登录。请先在微信给机器人发送一条消息，再接收群内新消息。';
+    view.context.hidden = isWebhookOnly(channel) ? false : isWecom(channel) ? !!channel.target : !(channel.connected && channel.canReceive === false);
+    view.context.textContent = isWebhookOnly(channel) ? '企业微信群 Webhook 仅发送通知；请在新版工作台的消息渠道中管理 Webhook 配置。' : isWecom(channel) ? '尚未选择企业微信会话。请在配置中刷新并选择目标企微群或私聊，再保存。' : '微信已登录。请先在微信给机器人发送一条消息，再接收群内新消息。';
     view.issue.textContent = channel.lastError || ''; view.issue.hidden = !channel.lastError;
     view.label.textContent = `渠道名称：${channel.name}`;
     view.login.textContent = isWecom(channel) ? '重新连接' : channel.connected ? '重新扫码' : '扫码登录';
-    view.configure.hidden = !isWecom(channel);
+    view.login.hidden = isWebhookOnly(channel);
+    view.configure.hidden = !isWecom(channel) || isWebhookOnly(channel);
     view.toggle.textContent = channel.enabled === false ? '启用渠道' : '暂停渠道';
   }
   async function openManager() {
@@ -152,7 +155,7 @@ export function createChannelsController({ $, api, state, node, icon, toast, com
   function updateCreateType() {
     const wecom = $('channel-create-type').value === 'wecom';
     $('channel-create-wecom').hidden = !wecom; $('channel-create-bot-id').required = wecom; $('channel-create-secret').required = wecom;
-    $('channel-create-name').placeholder = wecom ? '例如：报价协作机器人' : '例如：示例员工001的微信';
+    $('channel-create-name').placeholder = wecom ? '例如：报价协作机器人' : '例如：小敏的微信';
     $('channel-create-hint').textContent = wecom ? '添加后连接企业微信，再配置需要互通的会话。' : '添加后使用本人微信扫码登录。';
     clearSecret('channel-create');
   }

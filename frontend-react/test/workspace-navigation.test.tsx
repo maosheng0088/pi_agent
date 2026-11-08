@@ -22,6 +22,7 @@ vi.mock('../src/pages/AdministrationPage', () => ({ default: ({ view }: { view: 
 vi.mock('../src/pages/ChannelsPage', () => ({ default: () => <div>消息渠道配置页面</div> }))
 vi.mock('../src/pages/AdminLogsCenter', () => ({ default: () => <div>管理员日志页面</div> }))
 vi.mock('../src/pages/AgentManagementPage', () => ({ default: () => <div>管理页面：agents</div> }))
+vi.mock('../src/pages/MailboxPage',()=>({default:()=> <section aria-label="团队邮件">邮件阅读工作区</section>}))
 
 const employee: User = { id: 'employee-nav', username: 'employee-nav', displayName: '导航员工', role: 'member' }
 const admin: User = { id: 'admin-nav', username: 'admin-nav', displayName: '导航管理员', role: 'admin' }
@@ -67,16 +68,18 @@ describe('workspace navigation categories with real Semi controls and real route
     act(()=>workspace.patch({sessions:workspace.state.sessions.map(session=>({...session,attention:{unreadCount:0,resultCount:0,mentionCount:0,pendingCount:1}}))}))
     expect(screen.queryByRole('img',{name:'有未读新消息'})).toBeNull()
   })
-  it('gives employees only agent and tool entries on desktop and mobile', async () => {
+  it('gives employees agent, tool and mailbox entries on desktop and mobile', async () => {
     render(<App />)
     expect(topItem('智能体')).toBeTruthy(); expect(topItem('工具')).toBeTruthy(); expect(selected('智能体')).toBe(true)
     expect(within(desktop()).queryByText('管理', { exact: true })).toBeNull()
     expect(within(desktop()).queryByText('海运工具', { exact: true })).toBeNull()
     const menu = await mobileMenu()
-    expect(within(menu).getAllByRole('menuitem').map(item => item.textContent)).toEqual(['智能体', '工具'])
+    expect(within(menu).getAllByRole('menuitem').map(item => item.textContent)).toEqual(['智能体', '工具', '邮件'])
     expect(within(menu).queryByText('管理', { exact: true })).toBeNull()
     for (const view of [...adminPrimaryViews, ...managementViews]) expect(screen.queryByText(viewLabels[view], { exact: true })).toBeNull()
   })
+
+  it('opens the mailbox for employees through a distinct route',async()=>{render(<App/>);fireEvent.click(topItem('邮件'));expect(await screen.findByRole('region',{name:'团队邮件'})).toBeTruthy();expect(location.hash).toBe('#view=mailbox');expect(selected('邮件')).toBe(true)})
 
   it('exposes administrator primary pages directly and keeps the remaining pages in management', async () => {
     patch('chat', admin); render(<App />)
@@ -120,7 +123,7 @@ describe('workspace navigation categories with real Semi controls and real route
   it('groups the mobile menu without mixing admin options into public Tools', async () => {
     patch('ocean', admin); render(<App />)
     const menu = await mobileMenu(), items = within(menu).getAllByRole('menuitem')
-    expect(items.map(item => item.textContent)).toEqual(['智能体', '工具', ...adminPrimaryViews.map(view => viewLabels[view]), ...managementViews.map(view => viewLabels[view])])
+    expect(items.map(item => item.textContent)).toEqual(['智能体', '工具', '邮件', ...adminPrimaryViews.map(view => viewLabels[view]), ...managementViews.map(view => viewLabels[view])])
     expect(within(menu).getByText('管理', { selector: '.semi-dropdown-title' })).toBeTruthy()
     expect(menu.querySelectorAll('.semi-dropdown-divider')).toHaveLength(1)
     expect(within(menu).queryByText('海运工具', { exact: true })).toBeNull()

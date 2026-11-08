@@ -71,3 +71,8 @@ it('an active direct run blocks changing both the current page and URL',()=>{
  value.navigate('tools');expect(value.state.view).toBe('chat');expect(location.hash).toBe('#agent=a')
  value.navigate('ocean');expect(value.state.view).toBe('chat');expect(location.hash).toBe('#agent=a')
 })
+
+
+it('mailbox has an authenticated employee route and returns to the selected agent',()=>{
+ const value=store();value.navigate('mailbox');expect(value.state.view).toBe('mailbox');expect(location.hash).toBe('#view=mailbox');expect(navigationSection('mailbox')).toBe('mailbox');value.navigate('chat');expect(location.hash).toBe('#agent=a')
+})

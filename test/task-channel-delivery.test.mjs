@@ -10,7 +10,7 @@ import { TaskDeliveryService } from '../lib/task-delivery.mjs';
 const admin = { id: 'task-channel-admin', role: 'admin', displayName: '任务管理员' };
 const message = (id = 'task:fixture-run') => ({ messageId: id, authorName: 'Pi · 定时任务', text: '任务执行成功。' });
 
-function fixture(t) {
+function fixture(t, options = {}) {
   const directory = mkdtempSync(path.join(os.tmpdir(), 'pi-task-channels-'));
   const store = new Store(directory, directory), sent = { weixin: [], wecom: [] };
   const at = new Date().toISOString();
@@ -24,7 +24,7 @@ function fixture(t) {
   }
   const hub = new ChannelHub(store, {
     clientFactory: () => ({ async sendText(value) { sent.weixin.push(value); } }),
-    wecom: { clientFactory: () => assert.fail('Network clients must not be started by task-delivery tests') },
+    wecom: { clientFactory: () => assert.fail('Network clients must not be started by task-delivery tests'), ...options.wecom },
   });
   t.after(async () => {
     await hub.close(); store.close();
@@ -183,4 +183,47 @@ test('a failed recipient snapshot rolls back the group post and long final messa
   unavailable = false; await service.retry(input);
   assert.ok(service.history('group-a')[0].content.length < 100000);
   assert.ok(hub.deliveryStatus('task:long-run').pending > 0);
+});
+
+test('Webhook-only task recipients work without an external conversation or a WebSocket connection', async t => {
+  const delivered = [];
+  const { hub, sendOne, sent } = fixture(t, { wecom: {
+    webhookSender: async value => { delivered.push(value); }, webhookIntervalMs: 0,
+  } });
+  const channel = hub.create({ type: 'wecom', name: '定时报告群', connectionMode: 'webhook',
+    replyMode: 'webhook', webhookUrl: 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=fixture-task-hook-a' }, admin);
+  hub.bind('group-a', [channel.id], admin);
+  const service = new TaskDeliveryService(hub.store, {
+    preparePublish: (id, body) => hub.prepareTask(id, body),
+    publish: (id, body) => hub.publishTask(id, body),
+  });
+  const input = { schedule: { name: 'Webhook 定时报告', targetSessionId: 'group-a' }, run: { id: 'webhook-run' }, result: '本次业务检查正常。' };
+  await service.deliver(input);
+  assert.equal(hub.deliveryStatus('task:webhook-run').pending, 1);
+  await sendOne('wecom', channel.id);
+  assert.equal(delivered.length, 1);
+  assert.match(delivered[0].text, /本次业务检查正常/);
+  assert.deepEqual(sent, { weixin: [], wecom: [] });
+  assert.deepEqual(hub.deliveryStatus('task:webhook-run'), { queued: 1, sent: 1, failed: 0, pending: 0 });
+  await service.retry(input); await sendOne('wecom', channel.id);
+  assert.equal(delivered.length, 1, 'retry never repeats an acknowledged Webhook result');
+});
+
+test('changing a Webhook recipient invalidates captured results before they can be retried', async t => {
+  const delivered = [];
+  const { hub, sendOne } = fixture(t, { wecom: {
+    webhookSender: async value => { delivered.push(value); }, webhookIntervalMs: 0,
+  } });
+  const channel = hub.create({ type: 'wecom', name: '报告群', connectionMode: 'webhook',
+    webhookUrl: 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=fixture-old-task-hook' }, admin);
+  hub.bind('group-a', [channel.id], admin);
+  hub.publishTask('group-a', message('task:old-webhook-result'));
+  hub.update(channel.id, { webhookUrl: 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=fixture-new-task-hook' }, admin);
+  assert.equal(hub.retryDelivery('task:old-webhook-result').failed, 1);
+  await sendOne('wecom', channel.id);
+  assert.equal(delivered.length, 0, 'old results cannot be sent to a replacement group');
+  hub.publishTask('group-a', message('task:new-webhook-result'));
+  await sendOne('wecom', channel.id);
+  assert.equal(delivered.length, 1);
+  assert.match(delivered[0].webhookUrl, /fixture-new-task-hook$/);
 });

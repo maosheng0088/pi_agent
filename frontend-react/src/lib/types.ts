@@ -26,4 +26,4 @@ export interface Skill { id: string; name: string; description?: string; enabled
 export interface UploadedAttachment { id: string; name: string; size: number; mimeType: string; kind: 'image' | 'file'; url: string; downloadUrl: string }
 export interface Schedule { id: string; name: string; enabled?: boolean; sessionId?: string; [key: string]: any }
 export interface MembersResponse { members: User[]; externalMembers?: Array<{id:string;displayName:string;source:string}>; canRemoveMembers: boolean; canLeave: boolean; leaveBlockedReason?: string; ownerId?: string }
-export type View = 'chat' | 'agents' | 'tools' | 'skills' | 'schedules' | 'channels' | 'users' | 'audit' | 'events' | 'logs' | 'ocean'
+export type View = 'chat' | 'agents' | 'tools' | 'mailbox' | 'skills' | 'schedules' | 'channels' | 'users' | 'audit' | 'events' | 'logs' | 'ocean'

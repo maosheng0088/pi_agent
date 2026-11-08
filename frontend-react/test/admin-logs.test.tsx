@@ -4,7 +4,7 @@ import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testi
 import AdminLogsPage from '../src/pages/AdminLogsPage'
 
 vi.mock('lottie-web', () => ({ default: { loadAnimation: vi.fn(() => ({ destroy: vi.fn(), play: vi.fn(), pause: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn() })) } }))
-const admin = { id: 'admin', role: 'admin', username: 'admin', displayName: '管理员' }, employee = { id: 'member', role: 'member', username: '009001', displayName: '业务同事' }
+const admin = { id: 'admin', role: 'admin', username: 'admin', displayName: '管理员' }, employee = { id: 'member', role: 'member', username: '003009', displayName: '业务同事' }
 const entry = (id: number, message = `安全运行事件 ${id}`) => ({ id, timestamp: '2026-10-29T01:00:00Z', level: 'INFO', source: 'tasks', message, details: { taskId: 'task-safe', attempt: 1 } })
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json' } })
 const history = (logs = [entry(1)], options = {}) => ({ logs, nextBefore: null, hasMore: false, cursor: logs.at(-1)?.id || 0, sources: ['tasks', 'server'], retention: { maxEntries: 20000, maxAgeDays: 14 }, ...options })

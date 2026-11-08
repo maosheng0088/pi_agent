@@ -22,8 +22,8 @@ vi.mock('../src/lib/workspace', async () => {
   }
   return { workspace: store, useWorkspace: () => useSyncExternalStore(listener => { listeners.add(listener); return () => { listeners.delete(listener) } }, () => state.value) }
 })
-const employee = { id: 'employee', displayName: '业务同事', username: '009001', role: 'member' }
-const coworker = { id: 'coworker', displayName: '同事示例员工001', username: '003010', role: 'member' }
+const employee = { id: 'employee', displayName: '业务同事', username: '003009', role: 'member' }
+const coworker = { id: 'coworker', displayName: '同事小敏', username: '003010', role: 'member' }
 const admin = { id: 'admin', displayName: '管理员', username: 'admin', role: 'admin' }
 const group = { id: 'alpha', title: '报价助手', ownerId: admin.id, revision: 1, running: false, mode: 'workspace' }
 function ChatHarness({initialDetails=true}:{initialDetails?:boolean}){const [details,setDetails]=useState(initialDetails);return <ChatView detailsOpen={details} onToggleDetails={()=>setDetails(value=>!value)} onOpenAgents={vi.fn()} onSettings={vi.fn()}/>}
@@ -78,7 +78,7 @@ describe('real Semi group collaboration flows', () => {
   })
 
   it('searches within the current conversation and closes the inline panel after locating a result', async () => {
-    apiMock.mockImplementation((path:string)=>Promise.resolve(path.includes('/search?')?{results:[{role:'user',content:'核对预约',messageIndex:0,authorName:'同事示例员工001'}],total:1}:{members:[admin,employee,coworker],canLeave:true}))
+    apiMock.mockImplementation((path:string)=>Promise.resolve(path.includes('/search?')?{results:[{role:'user',content:'核对预约',messageIndex:0,authorName:'同事小敏'}],total:1}:{members:[admin,employee,coworker],canLeave:true}))
     state.value.messages=[{role:'user',id:'source',content:'核对预约',authorId:coworker.id,authorName:coworker.displayName}]
     renderChat(false)
     fireEvent.click(screen.getByRole('button',{name:'查找聊天记录'}))
@@ -105,7 +105,7 @@ describe('real Semi group collaboration flows', () => {
     state.value.skills = [{ id: 'browser', name: 'ego-browser', description: 'Long technical skill instructions' }]
     renderChat()
     const sidebar = screen.getByRole('complementary', { name: '群成员与邀请' })
-    await within(sidebar).findByText('同事示例员工001')
+    await within(sidebar).findByText('同事小敏')
     expect(within(sidebar).getByRole('button', { name: '邀请成员' })).toBeTruthy()
     expect(within(sidebar).queryByText('专业技能')).toBeNull()
     expect(within(sidebar).queryByText('智能体工作台')).toBeNull()
@@ -139,7 +139,7 @@ describe('real Semi group collaboration flows', () => {
     const id = '22222222-2222-4222-8222-222222222222', file = new File(['image'], '回执.png', { type: 'image/png' }), url = `/api/sessions/alpha/attachments/${id}`
     uploadMock.mockResolvedValue({ id, name: file.name, size: file.size, mimeType: file.type, kind: 'image', url, downloadUrl: `${url}?download=1` })
     state.value.messages = [{ id: 'source-1', role: 'user', authorId: coworker.id, authorName: coworker.displayName, content: '请核对这份回执' }]
-    renderChat(); fireEvent.click(screen.getByRole('button', { name: '引用同事示例员工001的消息' }))
+    renderChat(); fireEvent.click(screen.getByRole('button', { name: '引用同事小敏的消息' }))
     fireEvent.change(screen.getByLabelText('选择聊天附件'), { target: { files: [file] } })
     await waitFor(() => expect((screen.getByRole('button', { name: '提交任务' }) as HTMLButtonElement).disabled).toBe(false))
     fireEvent.click(screen.getByRole('button', { name: '提交任务' }))
@@ -168,7 +168,7 @@ describe('real Semi group collaboration flows', () => {
     fireEvent.click(screen.getByRole('button', { name: '提及成员' }))
     const mention = await screen.findByRole('combobox', { name: '提及协作成员或智能体' })
     fireEvent.click(mention)
-    fireEvent.click(await screen.findByRole('option', { name: /@同事示例员工001/ }))
+    fireEvent.click(await screen.findByRole('option', { name: /@同事小敏/ }))
     fireEvent.click(await screen.findByRole('option', { name: /@智能体/ }))
     fireEvent.click(screen.getByRole('button', {name:'关闭提及选择'}))
     fireEvent.change(input(), { target: { value: '整理我们讨论的地址变更要求' } })
@@ -180,8 +180,8 @@ describe('real Semi group collaboration flows', () => {
   it('references the original server message id and never submits a client quote snapshot', async () => {
     state.value.messages = [{ id: 'server-source-message-7', role: 'user', authorId: coworker.id, authorName: coworker.displayName, content: '柜号 ABCD 的地址需要确认' }]
     renderChat()
-    fireEvent.click(screen.getByRole('button', { name: '引用同事示例员工001的消息' }))
-    expect(screen.getByText('回复 同事示例员工001')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: '引用同事小敏的消息' }))
+    expect(screen.getByText('回复 同事小敏')).toBeTruthy()
     fireEvent.change(input(), { target: { value: '请按新地址生成费用明细' } })
     fireEvent.click(screen.getByRole('button', { name: '提交任务' }))
     await waitFor(() => expect(collaborateMock).toHaveBeenCalledExactlyOnceWith('请按新地址生成费用明细', { mode: 'agent', replyTo: 'server-source-message-7', mentions: [] }))
@@ -240,7 +240,7 @@ describe('real Semi group collaboration flows', () => {
     expect(screen.getByText(unsafe)).toBeTruthy()
     expect(screen.getByText('<svg onload=alert(1)>引用原文</svg>')).toBeTruthy()
     expect(document.querySelector('script,[onerror],[onload],a[href^="javascript:"]')).toBeNull()
-    fireEvent.click(screen.getByRole('button', { name: '引用同事示例员工001的消息' }))
+    fireEvent.click(screen.getByRole('button', { name: '引用同事小敏的消息' }))
     expect(document.querySelector('.composer-reply')?.textContent).toContain(unsafe)
     expect(document.querySelector('script,[onerror],[onload],a[href^="javascript:"]')).toBeNull()
   })

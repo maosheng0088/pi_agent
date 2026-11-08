@@ -29,7 +29,7 @@ vi.mock('../src/lib/workspace', async () => {
 
 const route = '/api/sessions/alpha/attachments/b54981a6-963c-4c38-92e2-01da3b4af4e4';
 const attachment = (name: string) => `${route}?name=${encodeURIComponent(name)}`;
-const employee = { id: 'employee', displayName: '业务同事', username: '009001', role: 'member' };
+const employee = { id: 'employee', displayName: '业务同事', username: '003009', role: 'member' };
 const admin = { id: 'admin', displayName: '管理员', username: 'admin', role: 'admin' };
 const group = { id: 'alpha', title: '报价助手', ownerId: admin.id, revision: 1, running: false, mode: 'workspace' };
 function replace(value: any) { workspace.patch(value); }

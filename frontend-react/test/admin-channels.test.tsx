@@ -30,6 +30,8 @@ const employee = { id: 'employee', username: 'employee', displayName: '同事', 
 const sessions = [{ id: 'group-a', title: '智能体A' }, { id: 'group-b', title: '智能体B' }]
 const weixin = { id: 'wechat-a', type: 'weixin', name: '微信渠道', enabled: true, status: 'idle', connected: false }
 const wecom = { id: 'wecom-a', type: 'wecom', name: '企微渠道', enabled: true, status: 'connected', connected: true, botId: 'original-bot', secretSet: true, target: { id: 'external-a', chatType: 'group' } }
+const webhook = { id: 'webhook-a', type: 'wecom', name: '企微通知', enabled: true, status: 'configured', connected: false, canSend: true, connectionMode: 'webhook', replyMode: 'webhook', webhookSet: true }
+const testWebhookUrl = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=fixture-not-a-real-webhook'
 const defer = <T,>() => { let resolve!: (value: T) => void; const promise = new Promise<T>(done => { resolve = done }); return { promise, resolve } }
 async function flush() { await act(async () => { for (let index = 0; index < 12; index++) await Promise.resolve() }) }
 async function advance(milliseconds: number) { await act(async () => { await vi.advanceTimersByTimeAsync(milliseconds) }) }
@@ -119,6 +121,136 @@ describe('Administration page requests and stale response handling', () => {
 })
 
 describe('Message channel requests, polling and configuration', () => {
+  it('keeps a connected channel online while showing its separate failed file delivery warning', async () => {
+    apiMock.mockResolvedValue({ channels: [{ ...wecom, replyMode: 'webhook', webhookSet: true, lastDeliveryError: '附件超过企业微信群文件 20 MiB 上限。' }] })
+    render(<ChannelsPage sessions={sessions} onChanged={() => {}} />); await flush()
+    expect(screen.getByText('已连接')).toBeTruthy()
+    expect(screen.getByRole('alert').textContent).toBe('消息未送达：附件超过企业微信群文件 20 MiB 上限。')
+    expect(screen.queryByText('连接异常')).toBeNull()
+  })
+
+  it('creates a send-only Webhook channel without bot credentials or a QR and clears the URL before the request completes', async () => {
+    const creation = defer<any>()
+    let created = false
+    apiMock.mockImplementation((path: string, options: any = {}) => {
+      if (options.method === 'POST') return creation.promise
+      return Promise.resolve(path === '/api/admin/channels' ? { channels: created ? [webhook] : [] } : {})
+    })
+    render(<ChannelsPage sessions={sessions} onChanged={() => {}} />); await flush()
+    fireEvent.click(screen.getByRole('button', { name: '添加渠道' }))
+    fireEvent.change(screen.getByLabelText('渠道类型'), { target: { value: 'wecom-webhook' } })
+    expect(screen.queryByLabelText('Bot ID')).toBeNull(); expect(screen.queryByLabelText('Secret')).toBeNull()
+    expect(within(screen.getByRole('dialog')).getByText(/图片可直接展示，PDF、Excel、Word/).textContent).toContain('单个文件上限 20 MiB')
+    fireEvent.change(screen.getByLabelText('渠道名称'), { target: { value: ' 企微通知 ' } })
+    const input = screen.getByLabelText('Webhook 地址') as HTMLInputElement
+    expect(input.type).toBe('password')
+    fireEvent.change(input, { target: { value: testWebhookUrl } })
+    const form = screen.getByRole('dialog').querySelector('form')!
+    fireEvent.submit(form); fireEvent.submit(form)
+    expect(input.value).toBe('')
+    expect(apiMock.mock.calls.filter(call => call[1]?.method === 'POST')).toHaveLength(1)
+    expect(apiMock).toHaveBeenCalledWith('/api/admin/channels', expect.objectContaining({ method: 'POST', body: { type: 'wecom', connectionMode: 'webhook', replyMode: 'webhook', name: '企微通知', webhookUrl: testWebhookUrl } }))
+    created = true; creation.resolve({ channel: webhook }); await flush()
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(screen.getByText('已配置')).toBeTruthy()
+    expect(apiMock.mock.calls.some(call => /\/logins|\/connect|\/conversations/.test(call[0]))).toBe(false)
+  })
+
+  it('rejects a missing or non-official Webhook URL without sending configuration', async () => {
+    apiMock.mockResolvedValue({ channels: [] })
+    render(<ChannelsPage sessions={sessions} onChanged={() => {}} />); await flush()
+    fireEvent.click(screen.getByRole('button', { name: '添加渠道' }))
+    fireEvent.change(screen.getByLabelText('渠道类型'), { target: { value: 'wecom-webhook' } })
+    fireEvent.change(screen.getByLabelText('渠道名称'), { target: { value: '企微通知' } })
+    const form = screen.getByRole('dialog').querySelector('form')!
+    fireEvent.submit(form); await flush()
+    expect(screen.getAllByRole('alert')[0].textContent).toContain('有效的企业微信群机器人 Webhook 地址')
+    for (const value of ['https://example.com/hook?key=fixture', 'http://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=fixture', 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=fixture&other=field']) {
+      fireEvent.change(screen.getByLabelText('Webhook 地址'), { target: { value } }); fireEvent.submit(form); await flush()
+    }
+    expect(apiMock.mock.calls.some(call => call[1]?.method === 'POST')).toBe(false)
+  })
+
+  it('renders Webhook channels as configured send-only destinations and edits without discovery or credentials', async () => {
+    apiMock.mockResolvedValue({ channels: [webhook] })
+    render(<ChannelsPage sessions={sessions} onChanged={() => {}} />); await flush()
+    expect(screen.getByText('企业微信群机器人 · 仅发送')).toBeTruthy()
+    expect(screen.getByText('已配置')).toBeTruthy()
+    expect(screen.getByText('0 个已连接 · 1 个 Webhook 已配置 · 每个渠道绑定一个智能体')).toBeTruthy()
+    expect(screen.queryByRole('button', { name: '重新连接' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: '配置' })); await flush()
+    expect(screen.queryByLabelText('企业微信 Bot ID')).toBeNull()
+    expect(screen.queryByLabelText('企业微信 Secret')).toBeNull()
+    expect(screen.queryByLabelText('消息互通会话')).toBeNull()
+    expect(screen.queryByLabelText('企业微信回复方式')).toBeNull()
+    expect((screen.getByLabelText('企业微信 Webhook 地址') as HTMLInputElement).value).toBe('')
+    expect(screen.getByText(/仅发送通知，不接收员工消息/)).toBeTruthy()
+    expect(within(screen.getByRole('dialog')).getByText(/图片可直接展示，PDF、Excel、Word/).textContent).toContain('AMR 音频按语音发送，视频和其他音频按文件发送')
+    expect(apiMock.mock.calls.some(call => call[0].endsWith('/conversations'))).toBe(false)
+  })
+
+  it('switches an existing long connection to Webhook replies and clears both private drafts during saving', async () => {
+    const saving = defer<any>()
+    apiMock.mockImplementation((path: string, options: any = {}) => options.method === 'PATCH' ? saving.promise : Promise.resolve(path === '/api/admin/channels' ? { channels: [wecom] } : { conversations: [wecom.target] }))
+    render(<ChannelsPage sessions={sessions} onChanged={() => {}} />); await flush()
+    fireEvent.click(screen.getByRole('button', { name: '配置' })); await flush()
+    fireEvent.change(screen.getByLabelText('企业微信回复方式'), { target: { value: 'webhook' } })
+    fireEvent.submit(screen.getByRole('dialog').querySelector('form')!); await flush()
+    expect(apiMock.mock.calls.some(call => call[1]?.method === 'PATCH')).toBe(false)
+    const input = screen.getByLabelText('企业微信 Webhook 地址') as HTMLInputElement
+    expect(input.type).toBe('password')
+    fireEvent.change(input, { target: { value: testWebhookUrl } })
+    fireEvent.submit(screen.getByRole('dialog').querySelector('form')!)
+    expect(input.value).toBe('')
+    expect(apiMock).toHaveBeenCalledWith('/api/admin/channels/wecom-a', expect.objectContaining({ method: 'PATCH', body: { botId: 'original-bot', target: wecom.target, replyMode: 'webhook', webhookUrl: testWebhookUrl } }))
+    saving.resolve({}); await flush()
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(apiMock.mock.calls.some(call => /\/test|\/send/.test(call[0]))).toBe(false)
+  })
+
+  it('preserves a saved Webhook URL when left blank and switches back without exposing or resending it', async () => {
+    const configured = { ...wecom, replyMode: 'webhook', webhookSet: true }
+    apiMock.mockImplementation((path: string) => Promise.resolve(path === '/api/admin/channels' ? { channels: [configured] } : { conversations: [wecom.target] }))
+    render(<ChannelsPage sessions={sessions} onChanged={() => {}} />); await flush()
+    fireEvent.click(screen.getByRole('button', { name: '配置' })); await flush()
+    expect((screen.getByLabelText('企业微信 Webhook 地址') as HTMLInputElement).value).toBe('')
+    fireEvent.submit(screen.getByRole('dialog').querySelector('form')!); await flush()
+    expect(apiMock).toHaveBeenCalledWith('/api/admin/channels/wecom-a', expect.objectContaining({ method: 'PATCH', body: { botId: 'original-bot', target: wecom.target } }))
+    fireEvent.click(screen.getByRole('button', { name: '配置' })); await flush()
+    fireEvent.change(screen.getByLabelText('企业微信 Webhook 地址'), { target: { value: testWebhookUrl } })
+    fireEvent.change(screen.getByLabelText('企业微信回复方式'), { target: { value: 'websocket' } })
+    expect(screen.queryByLabelText('企业微信 Webhook 地址')).toBeNull()
+    fireEvent.submit(screen.getByRole('dialog').querySelector('form')!); await flush()
+    expect(apiMock).toHaveBeenCalledWith('/api/admin/channels/wecom-a', expect.objectContaining({ method: 'PATCH', body: { botId: 'original-bot', target: wecom.target, replyMode: 'websocket' } }))
+  })
+
+  it('replaces a send-only Webhook without changing its connection mode, then clears it on close', async () => {
+    apiMock.mockResolvedValue({ channels: [webhook] })
+    render(<ChannelsPage sessions={sessions} onChanged={() => {}} />); await flush()
+    fireEvent.click(screen.getByRole('button', { name: '配置' })); await flush()
+    fireEvent.change(screen.getByLabelText('企业微信 Webhook 地址'), { target: { value: testWebhookUrl } })
+    fireEvent.submit(screen.getByRole('dialog').querySelector('form')!); await flush()
+    expect(apiMock).toHaveBeenCalledWith('/api/admin/channels/webhook-a', expect.objectContaining({ method: 'PATCH', body: { webhookUrl: testWebhookUrl } }))
+    fireEvent.click(screen.getByRole('button', { name: '配置' })); await flush()
+    expect((screen.getByLabelText('企业微信 Webhook 地址') as HTMLInputElement).value).toBe('')
+    fireEvent.change(screen.getByLabelText('企业微信 Webhook 地址'), { target: { value: testWebhookUrl } })
+    fireEvent.click(screen.getByRole('button', { name: '取消' })); await flush()
+    fireEvent.click(screen.getByRole('button', { name: '配置' })); await flush()
+    expect((screen.getByLabelText('企业微信 Webhook 地址') as HTMLInputElement).value).toBe('')
+  })
+
+  it('discards Webhook drafts when changing the new channel type', async () => {
+    apiMock.mockResolvedValue({ channels: [] })
+    render(<ChannelsPage sessions={sessions} onChanged={() => {}} />); await flush()
+    fireEvent.click(screen.getByRole('button', { name: '添加渠道' }))
+    fireEvent.change(screen.getByLabelText('渠道类型'), { target: { value: 'wecom-webhook' } })
+    fireEvent.change(screen.getByLabelText('Webhook 地址'), { target: { value: testWebhookUrl } })
+    fireEvent.change(screen.getByLabelText('渠道类型'), { target: { value: 'wecom' } })
+    expect(screen.queryByLabelText('Webhook 地址')).toBeNull()
+    fireEvent.change(screen.getByLabelText('渠道类型'), { target: { value: 'wecom-webhook' } })
+    expect((screen.getByLabelText('Webhook 地址') as HTMLInputElement).value).toBe('')
+  })
+
   it('ignores a late QR response after closing and does not leave a login poll behind', async () => {
     vi.useFakeTimers(); const start = defer<any>(), changed = vi.fn()
     apiMock.mockImplementation((path: string) => path.endsWith('/logins') ? start.promise : Promise.resolve({ channels: [weixin] }))

@@ -8,7 +8,7 @@ vi.mock('../src/lib/api', async original => ({ ...await original<typeof import('
 vi.mock('lottie-web', () => ({ default: { loadAnimation: vi.fn(() => ({ destroy: vi.fn(), play: vi.fn(), pause: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn() })) } }))
 const mockedApi = vi.mocked(api)
 const admin = { id: 'admin', username: 'admin', displayName: '管理员', role: 'admin' }
-const member = { id: 'member', username: '009001', displayName: '示例员工001', role: 'member' }
+const member = { id: 'member', username: '003009', displayName: '小敏', role: 'member' }
 const task = { id: 'task-one', sessionId: 'alpha', title: '核对提柜资料', instruction: '核对提柜时间及客户要求', status: 'waiting_human', createdBy: 'admin', createdByName: '管理员', assigneeId: 'admin', assigneeName: '管理员', createdAt: '2026-10-29T01:00:00Z', events: [{ id: 'e1', type: 'takeover', actorName: '管理员', content: '等待人工复核客户要求', createdAt: '2026-10-29T01:01:00Z' }] }
 const document = { id: 'doc-one', title: '提柜操作规范', sourceName: 'pickup.md', updatedAt: '2026-10-29T01:00:00Z', version: 2, content: '客户确认后安排提柜。<script>window.fixtureLeak=true</script>' }
 let currentTask: any, writes: Array<{ path: string; body: any }>

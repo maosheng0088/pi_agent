@@ -16,15 +16,21 @@ import { SkillCatalog } from './lib/skills.mjs';
 import { validateAvatarId } from './lib/avatar-options.mjs';
 import { AttachmentService } from './lib/attachments.mjs';
 import { DocumentContentService } from './lib/document-content.mjs';
+import { parseDocument, supportsDocument } from './lib/document-parser.mjs';
 import { CloudCredentialVault } from './lib/cloud-document-credentials.mjs';
 import { CloudDocumentService } from './lib/cloud-documents.mjs';
 import { createCloudDocumentAdapters } from './lib/cloud-document-adapters.mjs';
 import { packageCloudDocumentSkills } from './scripts/package-cloud-document-skills.mjs';
 import { EmailService } from './lib/email.mjs';
-import { createEmailAdapter } from './lib/email-adapter.mjs';
+import { MailboxService } from './lib/mailbox.mjs';
+import { MailboxAttachmentArchive, MAILBOX_ATTACHMENT_MAX_BYTES, mailboxAttachmentDisposition } from './lib/mailbox-attachments.mjs';
+import { createEmailAdapter, referencedImageCids } from './lib/email-adapter.mjs';
+import { formatMailboxRichBody, referencedMailboxExternalImage } from './lib/mailbox-rich-body.mjs';
+import { fetchMailboxExternalImage } from './lib/mailbox-external-image.mjs';
 import { assertEmailSkill,emailSkill,emailSkillAvailable,installEmailSkill,executeEmailAction } from './lib/email-skill.mjs';
 import { Readable } from 'node:stream';
-import { attachmentMarkdown, projectAttachmentMessages } from './lib/attachment-output.mjs';
+import { pipeline } from 'node:stream/promises';
+import { attachmentMarkdown, projectAttachmentMessages, channelAttachmentMessage } from './lib/attachment-output.mjs';
 import { ScheduleService } from './lib/schedules.mjs';
 import { ChannelHub } from './lib/channel-hub.mjs';
 import { TaskDeliveryService } from './lib/task-delivery.mjs';
@@ -74,13 +80,25 @@ export async function createServer(options = {}) {
       return result;
     }});
   await email.initialize();
+  const mailboxFiles=new MailboxAttachmentArchive(store);
+  const mailbox=new MailboxService(store,email,{...options.mailbox,autoStart:false});
+  let mailboxAttachmentReads = 0;
+  let mailboxRichReads = 0;
+  let mailboxExternalImageReads = 0;
+  const mailboxExternalImage = options.mailbox?.externalImageFetcher || fetchMailboxExternalImage;
   const active = new Map();
   const businessActive = new Map();
   const logs = new AdminLogService(store, { ...options.logs, knownSecrets: () => {
     const secrets = [store.config.apiKey,...cloudDocuments.knownSecrets(),...email.knownSecrets()];
-    for (const [table, columns] of [['im_channels', ['auth_token', 'context_token']], ['wecom_channels', ['secret']]]) {
+    for (const [table, columns] of [['im_channels', ['auth_token', 'context_token']], ['wecom_channels', ['secret', 'webhook_url']]]) {
       if (store.db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?").get(table)) {
-        for (const row of store.db.prepare(`SELECT ${columns.join(',')} FROM ${table}`).all()) secrets.push(...Object.values(row));
+        const present = new Set(store.db.prepare(`PRAGMA table_info(${table})`).all().map(column => column.name));
+        const selected = columns.filter(column => present.has(column));
+        if (!selected.length) continue;
+        for (const row of store.db.prepare(`SELECT ${selected.join(',')} FROM ${table}`).all()) {
+          secrets.push(...Object.values(row));
+          if (row.webhook_url) { try { secrets.push(new URL(row.webhook_url).searchParams.get('key')); } catch {} }
+        }
       }
     }
     return secrets;
@@ -88,6 +106,7 @@ export async function createServer(options = {}) {
   const originalEmailEvent=email.onEvent;
   email.onEvent=event=>{
     originalEmailEvent?.(event);
+    if(['email.account_updated','email.account_deleted'].includes(event.type))mailbox.invalidate(event.accountId);
     const messages={'email.account_updated':'邮箱连接配置已更新','email.account_deleted':'邮箱连接已移除','email.draft_created':'邮件草稿已创建','email.send_result':'邮件发送结果已保存'};
     logs.write({source:'system',message:messages[event.type]||'邮件操作已记录',level:['failed','unknown'].includes(event.status)?'WARNING':'INFO',sessionId:event.sessionId,details:{action:event.type,status:event.status,targetId:event.draftId||event.accountId}});
   };
@@ -269,7 +288,7 @@ export async function createServer(options = {}) {
   function auditValue(value) {
     if (typeof value === 'string') return logs.redact(redact(value));
     if (Array.isArray(value)) return value.map(auditValue);
-    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key,item]) => [key,/password|passwd|token|secret|api[-_]?key|authorization|cookie|credential/i.test(key) ? '[redacted]' : auditValue(item)]));
+    if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key,item]) => [key,/password|passwd|token|secret|api[-_]?key|authorization|cookie|credential|webhook/i.test(key) ? '[redacted]' : auditValue(item)]));
     return value;
   }
   async function history(meta, user, { adminAudit = false, includeAttention = false } = {}) {
@@ -690,7 +709,8 @@ export async function createServer(options = {}) {
         if (task) messageCards.bindKnowledge(message.sessionId, `work:${message.workTaskId}:${task.attempt}`, message.id);
       }
       changedWorkspace(message.sessionId);
-      if (channels) channels.publish(message.sessionId, { text: message.content, authorName: message.authorName || 'Pi', messageId: `work:${message.id}` });
+      if (channels) channels.publish(message.sessionId, { text: message.content, authorName: message.authorName || 'Pi', messageId: `work:${message.id}`,
+        ...(message.attachments?.length ? { attachments: message.attachments.map(item => ({ id: item.id })) } : {}) });
     },
     execute: async ({ task, actor, signal, onProgress }) => {
       const meta = getMeta(task.sessionId);
@@ -801,6 +821,14 @@ export async function createServer(options = {}) {
 
   channels = new ChannelHub(store, {
     ...options.channels,
+    prepareMessage: (sessionId, message) => channelAttachmentMessage(sessionId, message, id => attachments.get(id, sessionId)),
+    wecom: {
+      resolveAttachment: ({ sessionId, id }) => attachments.get(id, sessionId),
+      readAttachment: args => attachments.readBytes({ ...args, authorize: () => {
+        args.signal?.throwIfAborted(); getMeta(args.sessionId); args.authorize?.();
+      } }),
+      ...options.channels?.wecom,
+    },
     audit: (action, actor, target, details) => accounts.audit(action, actor, target, details),
     onMessage: ({ sessionId, actor, message, signal }) => executeMessage(sessionId, { message: message.text }, actor, { signal }),
   });
@@ -925,6 +953,199 @@ export async function createServer(options = {}) {
         return await attachments.serve(req, res, { sessionId, id: attachmentId, authorize });
       }
       if (req.method === 'POST' && url.pathname === '/api/auth/password') return json(res, 200, await accounts.changePassword(req, res, user, await jsonBody(req)));
+      const publicMailboxRoute=url.pathname.match(/^\/api\/mailbox\/(accounts|([A-Za-z0-9_-]+)\/(folders|messages|message|message-rich|sync|load-more|attachment|attachments\/([A-Za-z0-9_-]+)(\/content)?))$/);
+      if(publicMailboxRoute){
+        const [,resource,accountId,action,fileId,fileContent]=publicMailboxRoute,controller=new AbortController();
+        const externalImage = req.method === 'POST' && action === 'message-rich' && url.searchParams.get('view') === 'external-image';
+        const context={actor:user,mailboxPublic:true,signal:controller.signal,authorize:()=>{
+          controller.signal.throwIfAborted();
+          if(accounts.current(req)?.id!==user.id)throw new HttpError(401,'登录已失效，请重新登录。');
+          accounts.assertCurrent(user);
+        }};
+        context.authorize();const disconnected=()=>{if(!res.writableEnded)controller.abort();};res.once('close',disconnected);
+        try{
+          let result;
+          if(resource==='accounts'&&req.method==='GET')result={accounts:mailbox.listAccounts(context)};
+          if(accountId&&(['GET','HEAD'].includes(req.method)||externalImage)){
+            if(fileId){
+              const snapshot = mailbox.archiveKey(accountId, context);
+              const authorize = () => {
+                context.authorize();
+                const current = mailbox.archiveKey(accountId, context);
+                if (current.version !== snapshot.version || current.archiveId !== snapshot.archiveId) throw new HttpError(409, '邮箱配置已变更，请重新打开附件。');
+              };
+              const source = /^mail-(inbox|sent)-([1-9]\d{0,9})-([1-9]\d{0,9})-(\d+(?:_\d+){0,19})$/.exec(fileId);
+              if (!source) {
+                if (fileContent) throw new HttpError(404, '附件不存在。');
+                return await mailboxFiles.serve(req, res, {accountId, archiveId: snapshot.archiveId, id: fileId, authorize});
+              }
+              const [, folder, uid, uidValidity, part] = source;
+              const input = {folder, uid, uidValidity, part: part.replaceAll('_', '.')};
+              const reference = mailbox.attachmentReference(accountId, input, context);
+              const metadata = mailbox.attachmentMetadata(accountId, input, context);
+              if (fileContent && req.method !== 'GET') throw new HttpError(405, '不支持的附件预览操作。');
+              if (fileContent && !supportsDocument(metadata.name)) throw new HttpError(415, '此文件格式可下载查看。');
+              if (!fileContent && req.method === 'HEAD') {
+                authorize();
+                res.writeHead(200, {'Content-Type':'application/octet-stream','Content-Disposition':mailboxAttachmentDisposition(metadata.name),'Cache-Control':'private, no-store'});
+                return res.end();
+              }
+              if (mailboxAttachmentReads >= 3) throw new HttpError(503, '正在读取其他邮件附件，请稍后重试。');
+              mailboxAttachmentReads++;
+              try {
+                const file = await email.downloadAttachment(accountId, reference, {...context, authorize}, {publicRead:true}, {attachmentMaxBytes:MAILBOX_ATTACHMENT_MAX_BYTES});
+                if (!Buffer.isBuffer(file?.content)) throw new HttpError(502, '邮箱未返回有效附件。');
+                if (file.content.length > MAILBOX_ATTACHMENT_MAX_BYTES) throw new HttpError(413, '单个邮件附件不能超过 50 MiB。');
+                authorize();
+                mailbox.attachmentReference(accountId, input, context);
+                if (fileContent) {
+                  const document = await parseDocument({bytes:file.content, name:metadata.name, mimeType:metadata.mimeType, signal:controller.signal});
+                  authorize();
+                  mailbox.attachmentReference(accountId, input, context);
+                  return json(res, 200, redactValue({document}));
+                }
+                res.writeHead(200, {'Content-Type':'application/octet-stream','Content-Length':file.content.length,'Content-Disposition':mailboxAttachmentDisposition(metadata.name),'Cache-Control':'private, no-store'});
+                return await pipeline(Readable.from([file.content]), res, {signal:controller.signal});
+              } finally { mailboxAttachmentReads--; }
+            }
+            if(action==='folders')result=mailbox.folders(accountId,context);
+            if(action==='messages')result=mailbox.listMessages(accountId,{folder:url.searchParams.get('folder')||'inbox',query:url.searchParams.get('q')||'',limit:limitValue(url,'limit',50,50),offset:limitValue(url,'offset',0,10000000)},context);
+            if(action==='message')result={message:await mailbox.readMessage(accountId,{folder:url.searchParams.get('folder')||'inbox',uid:url.searchParams.get('uid'),uidValidity:url.searchParams.get('uidValidity')},context)};
+            if (action === 'message-rich' && (req.method === 'GET' || externalImage)) {
+              const view = url.searchParams.get('view');
+              if (view === 'external-image' && !externalImage) throw new HttpError(405, '请在邮件中点击显示外部图片。');
+              if (view !== null && view !== 'body' && view !== 'images' && !externalImage) throw new HttpError(400, '不支持的富文本读取方式。');
+              const input = {
+                folder: url.searchParams.get('folder') || 'inbox',
+                uid: url.searchParams.get('uid'),
+                uidValidity: url.searchParams.get('uidValidity'),
+              };
+              const snapshot = mailbox.archiveKey(accountId, context);
+              const reference = mailbox.reference(accountId, input, context);
+              const authorize = () => {
+                context.authorize();
+                const current = mailbox.archiveKey(accountId, context);
+                if (current.version !== snapshot.version || current.archiveId !== snapshot.archiveId) {
+                  throw new HttpError(409, '邮箱配置已变更，请重新打开邮件。');
+                }
+              };
+              const readRemote = async action => {
+                if (mailboxRichReads >= 3) throw new HttpError(503, '正在读取其他邮件，请稍后重试。');
+                mailboxRichReads++;
+                try {
+                  const data = await email.operation(accountId, {...context, authorize}, {publicRead:true}, action);
+                  authorize();
+                  if (mailbox.reference(accountId, input, context).folder !== reference.folder) {
+                    throw new HttpError(409, '邮件文件夹已变更，请重新打开邮件。');
+                  }
+                  return data;
+                } finally {
+                  mailboxRichReads--;
+                }
+              };
+              const cached = view === null || externalImage ? null : mailbox.richArchive(accountId, snapshot.version, reference, context.signal);
+              if (externalImage) {
+                const body = await jsonBody(req, 8192);
+                const currentRichBody = () => {
+                  authorize();
+                  if (mailbox.reference(accountId, input, context).folder !== reference.folder) {
+                    throw new HttpError(409, '邮件文件夹已变更，请重新打开邮件。');
+                  }
+                  return mailbox.richArchive(accountId, snapshot.version, reference, context.signal).body;
+                };
+                const approved = referencedMailboxExternalImage(currentRichBody()?.html, body.url);
+                if (!approved) throw new HttpError(404, '当前邮件没有可显示的这张外部图片。');
+                const sendImage = image => {
+                  res.writeHead(200, {
+                    'Content-Type': image.mimeType, 'Content-Length': image.content.length,
+                    'Cache-Control': 'private, no-store', 'Cross-Origin-Resource-Policy': 'same-origin',
+                  });
+                  return res.end(image.content);
+                };
+                const archivedImage = mailbox.externalImageArchive(accountId, snapshot.version, reference, approved, context.signal);
+                if (archivedImage) return sendImage(archivedImage);
+                if (mailboxExternalImageReads >= 4) throw new HttpError(503, '正在读取其他图片，请稍后重试。');
+                mailboxExternalImageReads++;
+                try {
+                  const image = await mailboxExternalImage(approved, { signal: controller.signal });
+                  if (!referencedMailboxExternalImage(currentRichBody()?.html, approved)) throw new HttpError(404, '邮件中的图片已更新，请重新打开邮件。');
+                  mailbox.storeExternalImage(accountId, snapshot.version, reference, approved, image, context.signal);
+                  return sendImage(image);
+                } finally { mailboxExternalImageReads--; }
+              } else if (view === 'images') {
+                const html = cached.body?.html || '';
+                const images = mailbox.inlineArchive(accountId, snapshot.version, reference, context.signal);
+                const pending = !cached.remoteDeleted && referencedImageCids(html).size > 0 && (!images || images.truncated)
+                  && mailbox.prioritizeInlineImages(accountId, snapshot.version, reference);
+                result = { ...(images || { images: [] }), ...(pending ? { pending: true } : {}) };
+              } else if (view === 'body') {
+                const localOnly = url.searchParams.get('local') !== '0';
+                if (cached.body || cached.remoteDeleted) result = formatMailboxRichBody(cached.body);
+                else if (localOnly) {
+                  const pending = mailbox.prioritizeRichBody(accountId, snapshot.version, reference);
+                  result = { ...formatMailboxRichBody(null), ...(pending ? { pending: true } : {}) };
+                } else if (typeof email.adapter.readRich !== 'function') result = formatMailboxRichBody(null);
+                else {
+                  const source = await readRemote((config, credentials, runtime) => email.adapter.readRich(config, credentials, {...reference, ...runtime, includeImages:false}));
+                  result = formatMailboxRichBody(mailbox.storeRichBody(accountId, snapshot.version, reference, source, context.signal));
+                }
+              } else {
+                result = typeof email.adapter.readRich === 'function'
+                  ? await readRemote((config, credentials, runtime) => email.adapter.readRich(config, credentials, {...reference, ...runtime}))
+                  : {html:'', images:[]};
+              }
+            }
+          }
+          if(accountId&&req.method==='POST'){
+            const body=await jsonBody(req);context.authorize();
+            if(action==='sync')result=mailbox.requestSync(accountId,context);
+            if(action==='load-more')result=mailbox.loadMore(accountId,body,context);
+            if(action==='attachment'){
+              const reference = mailbox.attachmentReference(accountId, body, context);
+              const metadata = mailbox.attachmentMetadata(accountId, body, context);
+              const id = `mail-${body.folder || 'inbox'}-${reference.uid}-${reference.uidValidity}-${reference.part.replaceAll('.', '_')}`;
+              result = {attachment:{id,name:metadata.name,size:metadata.size,mimeType:metadata.mimeType,downloadUrl:`/api/mailbox/${accountId}/attachments/${id}?download=1`}};
+            }
+          }
+          if(result){context.authorize();return json(res,200,redactValue(result));}
+          throw new HttpError(405,'不支持的公共邮件操作。');
+        }finally{res.off('close',disconnected);}
+      }
+      const mailboxRoute=url.pathname.match(/^\/api\/sessions\/([A-Za-z0-9][A-Za-z0-9_-]{0,127})\/mailbox\/(accounts|([A-Za-z0-9_-]+)\/(folders|messages|message|sync|load-more|attachment))$/);
+      if(mailboxRoute){
+        const [,sessionId,resource,accountId,action]=mailboxRoute;
+        const meta=getMeta(sessionId),controller=new AbortController();
+        const context={actor:user,sessionId,mode:meta.mode,signal:controller.signal,authorize:()=>{
+          controller.signal.throwIfAborted();
+          if(accounts.current(req)?.id!==user.id)throw new HttpError(401,'登录已失效，请重新登录。');
+          accounts.assertCurrent(user);requireGroupMember(sessionId,user);
+          if(getMeta(sessionId).taskWorker)throw new HttpError(404,'智能体不存在。');
+        }};
+        context.authorize();
+        const disconnected=()=>{if(!res.writableEnded)controller.abort();};res.once('close',disconnected);
+        try{
+          let result;
+          if(resource==='accounts'&&req.method==='GET')result={accounts:mailbox.listAccounts(context)};
+          if(accountId&&req.method==='GET'){
+            if(action==='folders')result=mailbox.folders(accountId,context);
+            if(action==='messages')result=mailbox.listMessages(accountId,{folder:url.searchParams.get('folder')||'inbox',query:url.searchParams.get('q')||'',limit:limitValue(url,'limit',50,50),offset:limitValue(url,'offset',0,1000000)},context);
+            if(action==='message')result={message:await mailbox.readMessage(accountId,{folder:url.searchParams.get('folder')||'inbox',uid:url.searchParams.get('uid'),uidValidity:url.searchParams.get('uidValidity')},context)};
+          }
+          if(accountId&&req.method==='POST'){
+            const body=await jsonBody(req);context.authorize();
+            if(action==='sync')result=mailbox.requestSync(accountId,context);
+            if(action==='load-more')result=mailbox.loadMore(accountId,body,context);
+            if(action==='attachment'){
+              const accountVersion=email.access(accountId,context).version;
+              const reference=mailbox.attachmentReference(accountId,body,context);
+              const file=await email.downloadAttachment(accountId,reference,context),authorize=()=>{context.authorize();if(email.access(accountId,context).version!==accountVersion)throw new HttpError(409,'邮箱配置已变更，请刷新后重试。');};
+              result={attachment:await attachments.upload({sessionId,name:file.name,stream:Readable.from([file.content]),contentLength:file.content.length,authorize})};
+            }
+          }
+          if(result){context.authorize();return json(res,200,redactValue(result));}
+          throw new HttpError(405,'不支持的邮件操作。');
+        }finally{res.off('close',disconnected);}
+      }
       const emailRoute=url.pathname.match(/^\/api\/sessions\/([A-Za-z0-9][A-Za-z0-9_-]{0,127})\/email\/(accounts(?:\/([^/]+)\/(folders|messages|read|attachment))?|drafts(?:\/([^/]+)(\/send)?)?)$/);
       if(emailRoute){
         const [,sessionId,resource,accountId,mailAction,draftId,sendAction]=emailRoute;
@@ -1515,6 +1736,7 @@ export async function createServer(options = {}) {
   });
   if (options.scheduler?.autoStart !== false) server.once('listening', () => schedules.start());
   if (options.channels?.autoStart !== false) server.once('listening', () => channels.start());
+  if (options.mailbox?.autoStart !== false) server.once('listening', () => mailbox.start());
   if (options.workTasks?.autoStart !== false) server.once('listening', () => workTasks.start());
   // Execution is never replayed after restart. Only completed, durably saved
   // results whose group post was not committed are resumed.
@@ -1535,12 +1757,15 @@ export async function createServer(options = {}) {
     logs,
     cloudDocuments,
     email,
+    mailbox,
+    mailboxFiles,
     close: () => closePromise ||= (async () => {
       closing = true;
       clearInterval(logStateTimer);
       logs.write({ source: 'system', message: 'Pi Web 服务正在关闭' });
       logs.closeStreams();
       cloudDocuments.close();
+      await mailbox.close();
       email.close();
       await workTasks.stop({ drain: true });
       await schedules.stop();

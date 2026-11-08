@@ -1,0 +1,9 @@
+Selected UI assets, collected 2026-10-28.
+
+Microsoft Fluent Color: Microsoft Corporation, MIT. Preserve MICROSOFT-MIT.txt with distributed copies.
+DiceBear Notionists: remix of Zoish, CC0 1.0. https://www.dicebear.com/styles/notionists/
+DiceBear Lorelei: remix of Lisa Wischofsky, CC0 1.0. https://www.dicebear.com/styles/lorelei/
+CC0 summary: https://creativecommons.org/publicdomain/zero/1.0/
+Open Doodles: Pablo Stanley. Official site states free for commercial and personal use, no credit required. https://www.opendoodles.com/
+
+Sources and per-file URLs/hashes are in manifest.json. Avatar samples are fictional illustrations, not employee likenesses. No brand logos or affiliation claims are included.

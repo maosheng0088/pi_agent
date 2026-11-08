@@ -43,6 +43,16 @@ const byText = (element, text) => descendants(element).find(child => child.textC
 const sample = () => ({ id: 'wx', name: '同事微信', connected: false, enabled: true, status: 'connecting' });
 const flush = async () => { for (let index = 0; index < 8; index++) await Promise.resolve(); };
 
+test('legacy manager recognizes send-only Webhooks without offering robot login or credential editing', async t => {
+  const h = harness(t, async () => ({ channels: [{ id: 'hook-only', type: 'wecom', name: '报告群',
+    connectionMode: 'webhook', replyMode: 'webhook', webhookSet: true, enabled: true, connected: false, status: 'configured' }] }));
+  await h.controller.openManager();
+  assert.ok(byText(card(h), '已配置'));
+  assert.equal(byText(card(h), '重新连接').hidden, true);
+  assert.equal(byText(card(h), '配置企业微信').hidden, true);
+  assert.ok(descendants(card(h)).some(item => item.textContent.includes('仅发送通知')));
+});
+
 test('manager refresh updates status and action closures without losing edits, focus, or delete confirmation', async t => {
   const channel = sample();
   const h = harness(t, async (_path, options) => { if (options.method === 'PATCH') Object.assign(channel, options.body); return { channels: [{ ...channel }] }; });

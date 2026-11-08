@@ -1,0 +1,15 @@
+vscode-icons file and folder icon reference collection
+
+Downloaded on: 2026-10-28 (Asia/Shanghai)
+Collection: vscode-icons
+Project: https://github.com/vscode-icons/vscode-icons
+Project author: Roberto Huertas; The vscode-icons Contributors
+License: MIT (upstream LICENSE is retained as vscode-icons-LICENSE)
+Upstream license source: https://github.com/vscode-icons/vscode-icons/blob/master/LICENSE
+Download URL: https://raw.githubusercontent.com/vscode-icons/vscode-icons/master/LICENSE
+
+This set contains 16 unmodified upstream SVG assets. Individual source and raw
+download URLs and SHA-256 hashes are listed in ../file-icons-manifest.json.
+Product names and logos remain associated with their respective owners.
+These files are stored for internal UI design reference. No business code or
+running service was changed by collection.

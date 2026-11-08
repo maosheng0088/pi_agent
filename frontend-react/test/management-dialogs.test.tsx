@@ -29,7 +29,7 @@ vi.mock('../src/lib/artwork', () => ({ channelIdentity: () => ({ label: '个人�
 
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
 const admin = { id: 'admin', username: 'admin', displayName: '管理员', role: 'admin' };
-const coworker = { id: 'coworker', username: '009001', displayName: '同事示例员工001', role: 'member' };
+const coworker = { id: 'coworker', username: '003009', displayName: '同事小敏', role: 'member' };
 const group = { id: 'alpha', title: '报价助手', ownerId: admin.id };
 const defaultConfig = { provider: 'custom', model: 'qa-model', baseUrl: 'https://api.example.com', cwd: 'D:/workspace', mode: 'workspace', systemPrompt: '业务要求', apiKeySet: true };
 let fetcher: ReturnType<typeof vi.fn>;
@@ -88,7 +88,7 @@ describe('React management dialog behavior', () => {
       return Promise.resolve(json(path === '/api/directory' ? { users: [admin, coworker, { ...coworker, id: 'invite', displayName: '待邀请同事' }] } : roster));
     });
     const view = render(<MembersDialog open session={group} user={admin} onClose={vi.fn()} onChanged={vi.fn()} />);
-    await screen.findByRole('button', { name: '移除成员 同事示例员工001' });
+    await screen.findByRole('button', { name: '移除成员 同事小敏' });
     expect(screen.queryByRole('button', { name: '移除成员 管理员' })).toBeNull();
     fireEvent.change(screen.getByLabelText('搜索同事姓名或账号'), { target: { value: '待邀请' } });
     fireEvent.click(screen.getByRole('checkbox', { name: /待邀请同事/ }));
@@ -97,7 +97,7 @@ describe('React management dialog behavior', () => {
     expect((screen.getByLabelText('搜索同事姓名或账号') as HTMLInputElement).value).toBe('待邀请');
     expect((screen.getByRole('checkbox', { name: /待邀请同事/ }) as HTMLInputElement).checked).toBe(true);
     expect(fetcher.mock.calls).toHaveLength(loads);
-    fireEvent.click(screen.getByRole('button', { name: '移除成员 同事示例员工001' }));
+    fireEvent.click(screen.getByRole('button', { name: '移除成员 同事小敏' }));
     fireEvent.click(screen.getByRole('button', { name: '确认移除' }));
     await waitFor(() => expect(writes).toEqual(['/api/sessions/alpha/members/coworker']));
   });
@@ -110,9 +110,9 @@ describe('React management dialog behavior', () => {
       return Promise.resolve(json(path === '/api/directory' ? { users: [admin, coworker] } : roster));
     });
     render(<MembersDialog open session={group} user={coworker} onClose={vi.fn()} onChanged={onChanged} />);
-    await screen.findByRole('checkbox', { name: /同事示例员工001/ });
+    await screen.findByRole('checkbox', { name: /同事小敏/ });
     expect(screen.queryByRole('button', { name: /移除成员/ })).toBeNull();
-    fireEvent.click(screen.getByRole('checkbox', { name: /同事示例员工001/ })); expect(writes).toHaveLength(0);
+    fireEvent.click(screen.getByRole('checkbox', { name: /同事小敏/ })); expect(writes).toHaveLength(0);
     fireEvent.click(screen.getByRole('button', { name: '添加成员（1）' }));
     await waitFor(() => expect(writes).toEqual([{ userIds: [coworker.id] }]));
     expect(onChanged).toHaveBeenCalledOnce();
@@ -166,7 +166,7 @@ describe('React management dialog behavior', () => {
     fireEvent.change(screen.getByLabelText('智能体名称'), { target: { value: '专业报价助手' } });
     fireEvent.change(screen.getByLabelText('智能体头像'), { target: { value: 'portrait-14' } });
     fireEvent.click(screen.getByRole('checkbox', { name: /报价技能/ }));
-    fireEvent.click(screen.getByRole('checkbox', { name: /同事示例员工001/ }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /同事小敏/ }));
     fireEvent.click(screen.getByRole('checkbox', { name: /业务微信/ }));
     expect((screen.getByRole('checkbox', { name: /已绑定企微/ }) as HTMLInputElement).disabled).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: '创建智能体' }));

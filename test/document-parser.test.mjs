@@ -34,6 +34,19 @@ test('document formats are explicit, case-insensitive, and exclude old office an
   assert.match((await parseDocument({ name: 'old.doc' })).warnings[0], /另存为 DOCX\/XLSX/);
 });
 
+test('in-memory attachment preview only parses the supplied byte range and enforces the file limit', async () => {
+  const backing = Buffer.from('prefix|attachment preview|suffix');
+  const bytes = backing.subarray('prefix|'.length, -'|suffix'.length);
+  const result = await parseDocument({ bytes, name: 'attachment.txt' });
+  assert.equal(result.status, 'ready');
+  assert.equal(result.sections[0].text, 'attachment preview');
+  assert.equal(backing.toString(), 'prefix|attachment preview|suffix');
+
+  const oversized = await parseDocument({ bytes: new Uint8Array(DOCUMENT_LIMITS.fileBytes + 1), name: 'oversized.txt' });
+  assert.equal(oversized.status, 'error');
+  assert.match(oversized.warnings[0], /50 MiB/);
+});
+
 test('PDF extracts text by one-based page and preserves original page count', async () => {
   const source = await fixture('shipment.pdf', makePdf(['Shipment 123', 'Appointment 42']));
   const before = await fs.readFile(source.filePath), result = await parseDocument(source);
@@ -82,12 +95,12 @@ test('DOCX without text reports OCR attention without inventing a successful bod
 });
 
 test('XLSX returns typed cells and readable sheet text without evaluating formulas or links', async () => {
-  const bytes = await makeXlsx([{ name: '加约记录', rows: [['账号', '预约', '通过', '备注'], ['009001', 2, true, { formula: '1+1', result: 2 }],
-    ['009002', 1, false, { formula: 'HYPERLINK("https://example.invalid", "link")' }], ['009003', null, true, { text: 'source label', hyperlink: 'https://example.invalid/' }]] }]);
+  const bytes = await makeXlsx([{ name: '加约记录', rows: [['账号', '预约', '通过', '备注'], ['003009', 2, true, { formula: '1+1', result: 2 }],
+    ['003014', 1, false, { formula: 'HYPERLINK("https://example.invalid", "link")' }], ['003016', null, true, { text: 'source label', hyperlink: 'https://example.invalid/' }]] }]);
   const result = await parse('预约.xlsx', bytes);
   assert.equal(result.status, 'ready'); assert.equal(result.sheets.length, 1); assert.equal(result.sheets[0].name, '加约记录');
-  assert.deepEqual(result.sheets[0].rows[1], ['009001', 2, true, 2]);
-  assert.match(result.sheets[0].rows[2][3], /未计算/); assert.match(result.text, /工作表：加约记录/); assert.match(result.text, /009001\t2\ttrue\t2/);
+  assert.deepEqual(result.sheets[0].rows[1], ['003009', 2, true, 2]);
+  assert.match(result.sheets[0].rows[2][3], /未计算/); assert.match(result.text, /工作表：加约记录/); assert.match(result.text, /003009\t2\ttrue\t2/);
   assert.match(result.warnings.join(' '), /不执行计算/);
 });
 
@@ -100,16 +113,16 @@ test('XLSX enforces worksheet, row and column caps and marks partial data', asyn
 });
 
 test('CSV preserves leading zeros, quoted commas/newlines, escaped quotes and literal formulas', async () => {
-  const result = await parse('records.csv', Buffer.from('\uFEFF账号,备注,公式\r\n009001,"a,b\nnext line","=1+1"\r\n009002,"two ""quotes""",@literal\r\n'));
+  const result = await parse('records.csv', Buffer.from('\uFEFF账号,备注,公式\r\n003009,"a,b\nnext line","=1+1"\r\n003014,"two ""quotes""",@literal\r\n'));
   assert.equal(result.status, 'ready');
-  assert.deepEqual(result.sheets[0].rows, [['账号', '备注', '公式'], ['009001', 'a,b\nnext line', '=1+1'], ['009002', 'two "quotes"', '@literal']]);
-  assert.match(result.text, /009001/); assert.match(result.warnings.join(' '), /不执行其中的公式/);
+  assert.deepEqual(result.sheets[0].rows, [['账号', '备注', '公式'], ['003009', 'a,b\nnext line', '=1+1'], ['003014', 'two "quotes"', '@literal']]);
+  assert.match(result.text, /003009/); assert.match(result.warnings.join(' '), /不执行其中的公式/);
 });
 
 test('CSV handles UTF16 and explicit delimiter declarations and rejects broken quoting', async () => {
-  const encoded = Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from('sep=;\r\n账号;数量\r\n009001;2', 'utf16le')]);
+  const encoded = Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from('sep=;\r\n账号;数量\r\n003009;2', 'utf16le')]);
   const result = await parse('records.csv', encoded);
-  assert.equal(result.status, 'ready'); assert.deepEqual(result.sheets[0].rows[1], ['009001', '2']);
+  assert.equal(result.status, 'ready'); assert.deepEqual(result.sheets[0].rows[1], ['003009', '2']);
   const semicolon = await parse('semicolon.csv', Buffer.from('"memo,with,commas";units\n"a,b,c";2'));
   assert.equal(semicolon.status, 'ready'); assert.deepEqual(semicolon.sheets[0].rows[1], ['a,b,c', '2']);
   const broken = await parse('broken.csv', Buffer.from('a,b\n"unterminated,42'));

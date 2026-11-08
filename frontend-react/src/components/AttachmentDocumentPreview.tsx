@@ -10,16 +10,19 @@ import './attachment-document.css'
 const PdfAttachmentView=lazy(()=>import('./PdfAttachmentView'))
 const supported='支持 PDF、Word（.docx）、Excel（.xlsx）、CSV 和文本。DOC、XLS、压缩包等文件请下载后查看。'
 const labels={ready:'已解析',unsupported:'仅下载',error:'文字解析失败',needs_ocr:'需要文字识别'} as const
-export default function AttachmentDocumentPreview({attachment,onClose}:{attachment:MessageAttachment;onClose():void}){
- const base=documentBase(attachment),format=documentFormat(attachment.name),[result,setResult]=useState<AttachmentDocument|null>(null),[loading,setLoading]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0),[textOpen,setTextOpen]=useState(false)
+export default function AttachmentDocumentPreview({attachment,mailboxAttachmentUrl,onClose}:{attachment:MessageAttachment;mailboxAttachmentUrl?:string;onClose():void}){
+ const base=mailboxAttachmentUrl===undefined?documentBase(attachment):/^\/api\/mailbox\/[A-Za-z0-9_-]+\/attachments\/mail-(?:inbox|sent)-\d{1,10}-\d{1,10}-\d+(?:_\d+){0,19}$/.test(mailboxAttachmentUrl)?mailboxAttachmentUrl:undefined
+ const format=documentFormat(attachment.name),[result,setResult]=useState<AttachmentDocument|null>(null),[loading,setLoading]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0),[textOpen,setTextOpen]=useState(false)
+ // Render mailbox PDFs from a single on-demand request rather than fetching the same bytes for text extraction.
+ const parseContent=format!=='unsupported'&&!(mailboxAttachmentUrl&&format==='pdf')
  useEffect(()=>{
   setResult(null);setError('');setTextOpen(false)
   if(!base){setError('附件地址无效，请重新打开消息。');setLoading(false);return}
-  if(format==='unsupported'){setLoading(false);return}
+  if(!parseContent){setLoading(false);return}
   const controller=new AbortController();let current=true;setLoading(true)
   void api<{document:unknown}>(`${base}/content`,{signal:controller.signal}).then(value=>{if(current&&!controller.signal.aborted)setResult(attachmentDocument(value.document))}).catch(reason=>{if(current&&!controller.signal.aborted)setError(errorMessage(reason))}).finally(()=>{if(current)setLoading(false)})
   return()=>{current=false;controller.abort()}
- },[base,format,retry])
+ },[base,parseContent,retry])
  const download=()=>{const link=document.createElement('a');link.href=attachment.downloadHref;link.download=attachment.name;link.click()}
  const state=result?.status
  return <Modal visible title={`文件预览 · ${attachment.name}`} onCancel={onClose} closeOnEsc centered width="min(1000px, 96vw)" className="attachment-document-modal" bodyStyle={{padding:0,overflow:'hidden'}} footer={<div className="attachment-document-footer"><span>原文件可随时下载</span><Button icon={<IconDownload aria-hidden/>} onClick={download}>下载原文件</Button><Button onClick={onClose}>关闭</Button></div>}><div className="attachment-document-body"><div className="attachment-document-status"><Tag>{format==='text'?'文本':format==='unsupported'?attachment.typeLabel:format.toUpperCase()}</Tag>{loading?<span role="status" className="attachment-inline-loading"><Spin size="small"/>正在解析文档内容…</span>:state&&<Tag color={state==='ready'?'green':state==='error'?'red':'orange'}>{labels[state]}</Tag>}{result?.pageCount!==undefined&&<span>共 {result.pageCount} 页</span>}</div>{!base?<p role="alert">{error}</p>:format==='unsupported'?<div className="attachment-document-empty"><h3>此格式暂不支持在线预览</h3><p>{supported}</p></div>:<>

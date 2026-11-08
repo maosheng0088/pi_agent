@@ -25,7 +25,7 @@ function fakeAdapter(){
  return {adapter,state};
 }
 async function setup(t){
- const {adapter,state}=fakeAdapter(),fixture=await createFixture({prefix:'email-api',options:{channels:{autoStart:false},scheduler:{autoStart:false},workTasks:{autoStart:false},email:{adapter,codec:codec(),operationTimeout:3000}}});t.after(()=>fixture.close());
+ const {adapter,state}=fakeAdapter(),fixture=await createFixture({prefix:'email-api',options:{mailbox:{autoStart:false},channels:{autoStart:false},scheduler:{autoStart:false},workTasks:{autoStart:false},email:{adapter,codec:codec(),operationTimeout:3000}}});t.after(()=>fixture.close());
  const admin=fixture.client(),member=fixture.client(),outsider=fixture.client(),guest=fixture.client();
  await checked(admin,'/auth/setup',{method:'POST',body:{username:'email-admin',displayName:'Mail Administrator',password:PASSWORD}},201);
  const users={};for(const [name,client] of [['member',member],['outsider',outsider]]){users[name]=(await checked(admin,'/admin/users',{method:'POST',body:{username:`email-${name}`,displayName:`Mail ${name}`,role:'member',password:PASSWORD}},201)).user;await checked(client,'/auth/login',{method:'POST',body:{username:users[name].username,password:PASSWORD}});}

@@ -53,9 +53,10 @@ test('mail accounts use encrypted credentials, current admin roles, safe metadat
 });
 
 test('new accounts default disabled and cannot silently allow sending or use insecure protocol modes', async t => {
-  const f = await fixture(t), minimal = { ...f.body }; delete minimal.enabled; delete minimal.allowSend; minimal.smtp = null;
+  const f = await fixture(t), minimal = { ...f.body }; delete minimal.enabled; delete minimal.allowSend; delete minimal.scope; delete minimal.groupIds; minimal.smtp = null;
   const account = await f.service.saveAccount(null, minimal, f.management);
   assert.equal(account.enabled, false); assert.equal(account.allowSend, false); assert.equal(account.smtp, null);
+  assert.equal(account.scope, 'none'); assert.deepEqual(account.groupIds, []);
   await assert.rejects(f.service.saveAccount(null, { ...f.body, imap: { ...f.body.imap, tls: 'plaintext' } }, f.management), /TLS/);
   await assert.rejects(f.service.saveAccount(null, { ...f.body, groupIds: ['missing-group'] }, f.management), /群聊不存在/);
   await assert.rejects(f.service.saveAccount(null, { ...f.body, smtp: null }, f.management), /SMTP/);
@@ -107,6 +108,65 @@ test('employees require live group membership, enabled mailbox and matching scop
   await assert.rejects(f.service.readMessage(f.account.id, { uid: 12 }, { ...f.context, actor: outsider }), /群成员/);
   f.store.db.prepare("UPDATE users SET disabled=1 WHERE id='employee'").run();
   await assert.rejects(f.service.readMessage(f.account.id, { uid: 12 }, f.context), /登录状态/); assert.deepEqual(f.calls, []);
+});
+
+test('mailbox AI authorization none stays independent from enabled public reads and preserves existing scopes', async t => {
+  const f = await fixture(t), publicContext = { actor: outsider, mailboxPublic: true, authorize() {} };
+  const none = await f.service.saveAccount(f.account.id, { scope: 'none', groupIds: ['group1'] }, f.management);
+  assert.equal(none.enabled, true); assert.equal(none.scope, 'none'); assert.deepEqual(none.groupIds, []);
+  assert.deepEqual(f.service.listAvailable(f.context), []);
+  await assert.rejects(f.service.readMessage(f.account.id, { uid: 12 }, f.context), /未分配/);
+  assert.equal((await f.service.readMessage(f.account.id, { uid: 12 }, publicContext, { publicRead: true })).text, '预约共 3 票。');
+  assert.equal((await f.service.downloadAttachment(f.account.id, { uid: 12, part: '2' }, publicContext, { publicRead: true })).content.toString(), 'count\n3');
+  await f.service.saveAccount(f.account.id, { scope: 'all' }, f.management);
+  assert.equal(f.service.listAvailable(f.context).length, 1);
+  await f.service.saveAccount(f.account.id, { name: '保留全部授权' }, f.management);
+  assert.equal(f.service.getAccount(f.account.id, f.management).scope, 'all');
+  await f.service.saveAccount(f.account.id, { scope: 'groups', groupIds: ['group1'] }, f.management);
+  await f.service.saveAccount(f.account.id, { name: '保留指定授权' }, f.management);
+  assert.deepEqual(f.service.getAccount(f.account.id, f.management).groupIds, ['group1']);
+});
+
+test('public read requires an internal flag and explicit readonly permission and cannot bypass AI or admin authorization', async t => {
+  const f = await fixture(t), publicContext = { actor: outsider, mailboxPublic: true, authorize() {} };
+  const reference = { uid: 12 }, permissions = { publicRead: true };
+  await assert.rejects(f.service.readMessage(f.account.id, reference, publicContext), /群成员/);
+  await assert.rejects(f.service.readMessage(f.account.id, reference, { actor: outsider }, permissions), /仅允许读取/);
+  await assert.rejects(f.service.readMessage(f.account.id, reference, { mailboxPublic: true }, permissions), /登录状态/);
+  assert.throws(() => f.service.readMessage(f.account.id, reference, publicContext, { publicRead: true, admin: true }), /不支持/);
+  assert.throws(() => f.service.readMessage(f.account.id, { ...reference, publicRead: true }, publicContext, permissions), /不支持/);
+  assert.throws(() => f.service.access(f.account.id, { ...f.context, mailboxPublic: true }, { publicRead: true, send: true }), /仅允许读取/);
+  assert.throws(() => f.service.access(f.account.id, { ...f.management, mailboxPublic: true }, { publicRead: true, admin: true }), /仅允许读取/);
+  assert.throws(() => f.service.listAccounts(publicContext), /管理员/);
+  assert.throws(() => f.service.listAvailable(publicContext), /群成员/);
+  await assert.rejects(f.service.prepareDraft(f.account.id, content, publicContext), /群成员/);
+  const draft = await f.service.prepareDraft(f.account.id, content, f.context);
+  await assert.rejects(f.service.sendDraft(draft.id, { idempotencyKey: 'public-cannot-send' }, { ...f.context, mailboxPublic: true }), /仅允许读取/);
+  assert.equal(f.service.getDraft(draft.id, f.context).status, 'draft'); assert.deepEqual(f.calls, []);
+  await f.service.saveAccount(f.account.id, { enabled: false }, f.management);
+  await assert.rejects(f.service.readMessage(f.account.id, reference, publicContext, permissions), /停用/);
+  await f.service.saveAccount(f.account.id, { enabled: true }, f.management);
+  f.store.db.prepare("UPDATE users SET disabled=1 WHERE id='other'").run();
+  await assert.rejects(f.service.readMessage(f.account.id, reference, publicContext, permissions), /登录状态/);
+});
+
+test('public mailbox reads recheck login and enabled state after awaiting provider data', async t => {
+  const f = await fixture(t), pause = deferred(), reached = deferred(), publicContext = { actor: outsider, mailboxPublic: true, authorize() {} };
+  f.adapter.read = async () => { reached.resolve(); await pause.promise; return { text: 'private message' }; };
+  const pending = f.service.readMessage(f.account.id, { uid: 12 }, publicContext, { publicRead: true }), rejected = assert.rejects(pending, /登录状态/);
+  await reached.promise; f.store.db.prepare("UPDATE users SET disabled=1 WHERE id='other'").run(); pause.resolve(); await rejected;
+});
+
+test('extended attachment limits are internal public-read options and cannot be injected by AI parameters', async t => {
+  const f = await fixture(t), publicContext = { actor: outsider, mailboxPublic: true, authorize() {} }, reference = { uid: 12, part: '2' }, maximum = 50 * 1024 * 1024;
+  let forwarded;
+  f.adapter.downloadAttachment = async (_a, _b, options) => { options.authorize(); forwarded = options; return { content: Buffer.from('public-attachment') }; };
+  const result = await f.service.downloadAttachment(f.account.id, reference, publicContext, { publicRead: true }, { attachmentMaxBytes: maximum });
+  assert.equal(result.content.toString(), 'public-attachment'); assert.equal(forwarded.attachmentMaxBytes, maximum);
+  assert.throws(() => f.service.downloadAttachment(f.account.id, { ...reference, attachmentMaxBytes: maximum }, f.context), /不支持/);
+  assert.throws(() => f.service.downloadAttachment(f.account.id, reference, f.context, {}, { attachmentMaxBytes: maximum }), /仅供公共邮箱/);
+  await assert.rejects(f.service.downloadAttachment(f.account.id, reference, f.context, { publicRead: true }, { attachmentMaxBytes: maximum }), /仅允许读取/);
+  for (const limit of [0, 1.5, maximum + 1, '52428800']) assert.throws(() => f.service.downloadAttachment(f.account.id, reference, publicContext, { publicRead: true }, { attachmentMaxBytes: limit }), /上限/);
 });
 
 test('receiver-only accounts can check, search and prepare drafts while sending stays forbidden', async t => {
@@ -189,6 +249,43 @@ test('sending requires current workspace mode and allowSend even for an existing
   await f.service.saveAccount(f.account.id, { allowSend: false }, f.management);
   await assert.rejects(f.service.sendDraft(draft.id, { idempotencyKey: 'disabled-attempt' }, f.context), /尚未允许/);
   assert.equal(f.service.getDraft(draft.id, f.context).status, 'draft'); assert.ok(!f.calls.includes('send'));
+});
+
+test('Sent copy metadata stays JSON-safe, persists independently and never makes a sent draft sendable again', async t => {
+  const f = await fixture(t); let sends = 0;
+  for (const status of ['saved', 'already_present', 'unavailable', 'failed']) {
+    f.adapter.send = async (_a, _b, { onAccepted }) => {
+      sends++;
+      const accepted = { messageId: '<sent-copy@example.test>', accepted: content.to, rejected: [], sentCopy: { status: 'failed' } };
+      onAccepted(accepted);
+      return { ...accepted, sentCopy: { status, folder: '已发送邮件', raw: Buffer.from(secret), credentials: { imapPassword: secret } } };
+    };
+    const draft = await f.service.prepareDraft(f.account.id, content, f.context);
+    const result = await f.service.sendDraft(draft.id, { idempotencyKey: `copy-${status}` }, f.context);
+    assert.equal(result.status, 'sent'); assert.deepEqual(result.result.sentCopy, { status, folder: '已发送邮件' });
+    assert.doesNotMatch(JSON.stringify(result.result), /offline-mail|credentials|raw/);
+    assert.equal((await f.service.sendDraft(draft.id, { idempotencyKey: `again-${status}` }, f.context)).status, 'sent');
+  }
+  assert.equal(sends, 4);
+});
+
+test('confirmed SMTP acceptance survives outer service timeout or cancellation during Sent copy and is never resent', async t => {
+  for (const canceled of [false, true]) {
+    const f = await fixture(t, { operationTimeout: 50 }), controller = new AbortController(); let sends = 0;
+    f.adapter.send = async (_a, _b, { onAccepted, signal }) => {
+      sends++;
+      onAccepted({ messageId: '<accepted-before-copy@example.test>', accepted: content.to, rejected: [], sentCopy: { status: 'failed' } });
+      if (canceled) controller.abort();
+      await delay(10000, null, { signal });
+    };
+    const draft = await f.service.prepareDraft(f.account.id, content, f.context);
+    const sending = f.service.sendDraft(draft.id, { idempotencyKey: `copy-interrupted-${canceled}` }, { ...f.context, signal: controller.signal });
+    if (canceled) await assert.rejects(sending, error => error.name === 'AbortError');
+    const result = canceled ? f.service.getDraft(draft.id, f.context) : await sending;
+    assert.equal(result.status, 'sent'); assert.equal(result.result.sentCopy.status, 'failed'); assert.ok(result.sentAt);
+    const retried = await f.service.sendDraft(draft.id, { idempotencyKey: `copy-retry-${canceled}` }, f.context);
+    assert.equal(retried.status, 'sent'); assert.equal(sends, 1);
+  }
 });
 
 test('uncertain SMTP failures are unknown and never automatically repeated; definitely-unsent failures stay failed', async t => {

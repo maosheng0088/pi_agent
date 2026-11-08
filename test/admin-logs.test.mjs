@@ -82,6 +82,15 @@ test('retention enforces seven-day age and bounded row count while preserving mo
   restored.close();
 });
 
+test('Webhook fields and configuration assignments never enter runtime logs as credentials', t => {
+  const { db, logs } = fixture(t);
+  logs.write({ source: 'system', message: 'webhookUrl="private-hook-url" webhook_url=private-hook-snake',
+    details: { webhookUrl: 'private-hook-details', status: 'configured' } });
+  const raw = JSON.stringify(db.prepare('SELECT * FROM admin_runtime_logs').all());
+  for (const value of ['private-hook-url', 'private-hook-snake', 'private-hook-details']) assert.ok(!raw.includes(value));
+  assert.match(raw, /redacted/);
+});
+
 test('list pagination is ascending, after catches earliest unread, and searches exact identifiers safely', t => {
   const { logs } = fixture(t);
   for (let i = 1; i <= 12; i++) logs.write({ level: i % 2 ? 'INFO' : 'ERROR', source: i % 2 ? 'tasks' : 'http', message: i === 6 ? 'literal 100%_complete' : `entry ${i}`, taskId: `task-${i}`, sessionId: `group-${i}`, actorId: `actor-${i}` });

@@ -42,3 +42,10 @@ test('step pagination preserves all tool calls, and stopping closes unfinished s
  assert.equal(first.total,55);assert.equal(first.steps.length,50);assert.equal(last.steps.length,5);assert.equal(last.hasMore,false);assert(first.steps.every(step=>step.status==='interrupted'));
  assert.equal(service.list().runs[0].status,'cancelled');
 }));
+
+test('tool argument Webhook credentials are redacted independently of the configured URL',()=>fixture(async store=>{
+ const service=new ExecutionTraceService(store);const id=service.start({sessionId:'webhook-trace'});
+ service.event(id,{type:'tool_execution_start',toolCallId:'configure',toolName:'configure',args:{webhookUrl:'private-unconfigured-hook',nested:{webhook_url:'private-other-hook'}}});
+ const raw=JSON.stringify(store.db.prepare('SELECT args_text FROM execution_steps').all());
+ assert(!raw.includes('private-unconfigured-hook'));assert(!raw.includes('private-other-hook'));assert.match(raw,/redacted/);
+}));

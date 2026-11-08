@@ -35,12 +35,12 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 describe('AuthView with real Semi controls', () => {
   it('allows an existing short password and clears it after successful login', async () => {
     render(<AuthView />)
-    fill('账号', '009001'); fill('密码', '1234')
+    fill('账号', '003009'); fill('密码', '1234')
     expect(screen.queryByLabelText('确认密码', { exact: true })).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: '进入工作台' }))
-    expect(authenticate).toHaveBeenCalledWith('009001', '1234', '')
+    expect(authenticate).toHaveBeenCalledWith('003009', '1234', '')
     await waitFor(() => expect(input('密码').value).toBe(''))
-    expect(input('账号').value).toBe('009001')
+    expect(input('账号').value).toBe('003009')
   })
 
   it('keeps normal login compatible with one-character imported passwords', async () => {

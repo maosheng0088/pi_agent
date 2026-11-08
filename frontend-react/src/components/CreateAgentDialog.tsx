@@ -9,7 +9,7 @@ import ChannelMark from './ChannelMark';
 import './management-dialogs.css';
 
 interface Props { open: boolean; user: User; onClose(): void; onCreated(id: string): void }
-interface Channel { id: string; name: string; type: string; sessionId?: string | null }
+interface Channel { id: string; name: string; type: string; sessionId?: string | null; connectionMode?: 'websocket' | 'webhook' }
 function toggleId(previous: string[], id: string) { return previous.includes(id) ? previous.filter(value => value !== id) : [...previous, id]; }
 
 export default function CreateAgentDialog({ open, user, onClose, onCreated }: Props) {
@@ -76,8 +76,8 @@ export default function CreateAgentDialog({ open, user, onClose, onCreated }: Pr
           <label className="pi-visually-hidden" htmlFor={`agent-people-${id}`}>搜索员工姓名或账号</label><Input id={`agent-people-${id}`} value={query} onChange={setQuery} placeholder="搜索姓名或账号" showClear />
           <div className="pi-create-people">{people.map(person => <Checkbox key={person.id} checked={selectedPeople.includes(person.id)} disabled={busy} onChange={() => setSelectedPeople(previous => toggleId(previous, person.id))}><span>{person.displayName}</span><small>{person.username}</small></Checkbox>)}{!people.length && <p className="pi-dialog-help">没有匹配的员工。</p>}</div>
         </section>
-        {!!channels.length && <section className="pi-dialog-section"><div className="pi-dialog-section-line"><h3>绑定消息渠道</h3><span>可选</span></div><p className="pi-dialog-help">绑定后可在对应微信或企微渠道中接续工作。</p>
-          {channels.map(channel => <Checkbox className="pi-channel-choice" key={channel.id} checked={selectedChannels.includes(channel.id)} disabled={busy || !!createdId || !!channel.sessionId} onChange={() => setSelectedChannels(previous => toggleId(previous, channel.id))}><span className="pi-channel-choice-copy"><ChannelMark type={channel.type} size={32} /><span><strong>{channel.name}</strong><small>{channel.sessionId ? '已绑定其他智能体' : channelIdentity(channel.type).label}</small></span></span></Checkbox>)}
+        {!!channels.length && <section className="pi-dialog-section"><div className="pi-dialog-section-line"><h3>绑定消息渠道</h3><span>可选</span></div><p className="pi-dialog-help">绑定长连接渠道可互通新消息；绑定 Webhook 可向企业微信群推送回复和任务结果。</p>
+          {channels.map(channel => <Checkbox className="pi-channel-choice" key={channel.id} checked={selectedChannels.includes(channel.id)} disabled={busy || !!createdId || !!channel.sessionId} onChange={() => setSelectedChannels(previous => toggleId(previous, channel.id))}><span className="pi-channel-choice-copy"><ChannelMark type={channel.type} size={32} /><span><strong>{channel.name}</strong><small>{channel.sessionId ? '已绑定其他智能体' : channel.type === 'wecom' && channel.connectionMode === 'webhook' ? '企业微信群 · 仅发送通知' : channelIdentity(channel.type).label}</small></span></span></Checkbox>)}
         </section>}
       </>}
     </Form>

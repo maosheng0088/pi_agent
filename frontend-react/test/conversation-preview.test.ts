@@ -16,7 +16,7 @@ describe('conversationPreview', () => {
   it('preserves a short mixed body and distinguishes confirmed image attachments', () => {
     const picture = { ...attachment, name: '回执.png', mimeType: 'image/png', kind: 'image' as const }
     const text = `请核对这份回执\n\n![回执.png](${url}?name=${encodeURIComponent(picture.name)})`
-    expect(conversationPreview([{ role: 'user', content: text, authorName: '示例员工001', attachments: [picture] }], false, 'alpha')).toBe('示例员工001：请核对这份回执 [图片] 回执.png')
+    expect(conversationPreview([{ role: 'user', content: text, authorName: '小敏', attachments: [picture] }], false, 'alpha')).toBe('小敏：请核对这份回执 [图片] 回执.png')
   })
 
   it('never classifies arbitrary links or other-group metadata as uploaded attachments', () => {
@@ -29,8 +29,8 @@ describe('conversationPreview', () => {
   it('uses the latest real message and normalizes its author and Markdown', () => {
     expect(conversationPreview([
       { role: 'assistant', content: '之前的回复' },
-      { role: 'user', authorName: ' 示例员工001\n ', content: '# 今日任务\n\n- 请查看 [业务清单](https://example.com/tasks)\n- **优先**处理 `待确认` 项目' },
-    ])).toBe('示例员工001：今日任务 请查看 业务清单 优先处理 待确认 项目')
+      { role: 'user', authorName: ' 小敏\n ', content: '# 今日任务\n\n- 请查看 [业务清单](https://example.com/tasks)\n- **优先**处理 `待确认` 项目' },
+    ])).toBe('小敏：今日任务 请查看 业务清单 优先处理 待确认 项目')
   })
 
   it('uses AI for a completed assistant reply and preserves business identifiers', () => {
@@ -54,10 +54,10 @@ describe('conversationPreview', () => {
   it('hides unfinished assistant text during an active turn', () => {
     const messages: Message[] = [
       { role: 'assistant', content: '上一轮完成的回复' },
-      { role: 'user', authorName: '示例员工006', content: '继续查询' },
+      { role: 'user', authorName: 'Kevin', content: '继续查询' },
       { role: 'assistant', content: '正在读取数据，尚未完成' },
     ]
-    expect(conversationPreview(messages, true)).toBe('示例员工006：继续查询')
+    expect(conversationPreview(messages, true)).toBe('Kevin：继续查询')
     expect(conversationPreview(messages, false)).toBe('AI：正在读取数据，尚未完成')
     expect(conversationPreview([{ role: 'assistant', content: '未结束' }], true)).toBe('')
   })

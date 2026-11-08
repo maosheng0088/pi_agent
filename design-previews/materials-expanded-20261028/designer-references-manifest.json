@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "id": "chatty-group",
+      "title": "Chatty：群聊与成员资料",
+      "author": "Faza Dzikrulloh / Hatypo Studio",
+      "sourceUrl": "https://dribbble.com/shots/21228221-Chatty-Message-Dashboard-Group-Detail",
+      "downloadUrl": "https://cdn.dribbble.com/userupload/6339559/file/original-397a9d2f564e957f9b53a69cf8740bee.png?resize=1600x1200",
+      "style": "浅色蓝调群聊",
+      "takeaway": "群成员、图片文件与资料侧栏",
+      "file": "designer-references/chatty-group.png",
+      "usage": "设计师作品公开展示图，用于内部设计比较。",
+      "bytes": 162369,
+      "sha256": "d1b1089029997e6df57d8e33a5ed6121f9a7b66d97dd2432840801c8b853b8c9"
+    },
+    {
+      "id": "chatify-purple",
+      "title": "Chatify：紫色消息工作台",
+      "author": "Viola Primadewi",
+      "sourceUrl": "https://dribbble.com/shots/22340021--Chatify-Message-Web-App",
+      "downloadUrl": "https://cdn.dribbble.com/userupload/9478790/file/original-b69f31ac8e7e775660e82765f9c1c068.png",
+      "style": "浅紫色社交 IM",
+      "takeaway": "人物头像、媒体预览与品牌色节奏",
+      "file": "designer-references/chatify-purple.png",
+      "usage": "设计师作品公开展示图，用于内部设计比较。",
+      "bytes": 358606,
+      "sha256": "1ad21e678c2f6bbff268858d210a9c49d6bebaaa4dd324df812a095439815425"
+    },
+    {
+      "id": "chatyuh-dark",
+      "title": "Chatyuh：深色桌面 IM",
+      "author": "Nizar Ali / Vektora",
+      "sourceUrl": "https://dribbble.com/shots/18740647-Chatyuh-Chatting-Desktop",
+      "downloadUrl": "https://cdn.dribbble.com/users/8560571/screenshots/18740647/media/4bda883baab4c909b1fd2ee40c4922b8.png?compress=1&resize=1600x1200&vertical=top",
+      "style": "深色团队聊天",
+      "takeaway": "暗色层次、共享媒体、文件卡片",
+      "file": "designer-references/chatyuh-dark.png",
+      "usage": "设计师作品公开展示图，用于内部设计比较。",
+      "bytes": 337778,
+      "sha256": "9806ebcb13a6805fc400bc127beb534240e9007c4b22b6effcc585737a9cf3fa"
+    }
+  ],
+  "failures": [
+    {
+      "id": "chattalk-light-dark",
+      "error": "HTTP 404"
+    }
+  ]
+}

@@ -72,21 +72,25 @@ export async function api<T = any>(path: string, { method = 'GET', body, signal,
   return data as T
 }
 export function errorMessage(error: unknown): string { return error instanceof Error ? error.message : '操作失败，请重试。' }
-/** Authenticated, bounded binary reads for the local PDF renderer. */
-export async function apiAttachmentBytes(path:string,{signal}:{signal:AbortSignal}):Promise<Uint8Array>{
+/** Authenticated, bounded binary reads for attachment downloads and previews. */
+export async function apiAttachmentBytes(path:string,{signal,maxBytes=MAX_CHAT_FILE_BYTES,accept='application/pdf',body}:{signal:AbortSignal;maxBytes?:number;accept?:string;body?:{url:string}}):Promise<Uint8Array>{
   const requestEpoch=identityEpoch
-  const response=await fetch(path,{credentials:'same-origin',mode:'same-origin',redirect:'error',signal,headers:{Accept:'application/pdf'}})
+  const response=await fetch(path,{credentials:'same-origin',mode:'same-origin',redirect:'error',signal,
+    headers:{Accept:accept,...(body?{'Content-Type':'application/json'}:{})},
+    ...(body?{method:'POST',body:JSON.stringify(body)}:{}),
+  })
   if(!response.ok){
     const data=await response.json().catch(()=>({}))
     if(response.status===401&&!signal.aborted&&requestEpoch===identityEpoch)window.dispatchEvent(new Event('pi:auth-expired'))
     throw new ApiError(typeof data.error==='string'?data.error:`文件读取失败（${response.status}）`,response.status,data.code)
   }
   if(signal.aborted)throw new DOMException('预览已关闭。','AbortError')
-  if(Number(response.headers.get('Content-Length'))>MAX_CHAT_FILE_BYTES){await response.body?.cancel();throw new Error('文件超过 50 MiB，无法在线预览。')}
-  if(!response.body){const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.length>MAX_CHAT_FILE_BYTES)throw new Error('文件超过 50 MiB，无法在线预览。');return bytes}
+  const tooLarge=`文件超过 ${maxBytes/(1024*1024)} MiB，无法在线预览。`
+  if(Number(response.headers.get('Content-Length'))>maxBytes){await response.body?.cancel();throw new Error(tooLarge)}
+  if(!response.body){const bytes=new Uint8Array(await response.arrayBuffer());if(bytes.length>maxBytes)throw new Error(tooLarge);return bytes}
   const reader=response.body.getReader(),chunks:Uint8Array[]=[];let length=0
   try{
-    while(true){const {done,value}=await reader.read();if(signal.aborted)throw new DOMException('预览已关闭。','AbortError');if(done)break;if(!value)continue;length+=value.length;if(length>MAX_CHAT_FILE_BYTES){await reader.cancel();throw new Error('文件超过 50 MiB，无法在线预览。')}chunks.push(value)}
+    while(true){const {done,value}=await reader.read();if(signal.aborted)throw new DOMException('预览已关闭。','AbortError');if(done)break;if(!value)continue;length+=value.length;if(length>maxBytes){await reader.cancel();throw new Error(tooLarge)}chunks.push(value)}
     const bytes=new Uint8Array(length);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length}return bytes
   }finally{reader.releaseLock()}
 }
