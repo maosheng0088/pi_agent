@@ -20,6 +20,17 @@ desktop/release/
 android/build/
 android/release/
 
+# Private data, generated files and signing credentials
+agents/
+qa/
+
+# Python bytecode caches
+__pycache__/
+*.pyc
+
+# Generated cloud-document skill packages
+cloud-document-skills/packages/
+
 # Release binaries - rebuilt by the release pipeline (116 MB installers exceed the 100 MB host limit)
 public/desktop-updates/
 public/android/*.apk
